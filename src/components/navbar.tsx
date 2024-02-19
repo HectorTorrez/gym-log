@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import {SignedIn, SignedOut, UserButton} from "@clerk/nextjs";
 
 import {cn} from "@/lib/utils";
 
@@ -26,12 +27,17 @@ export function MainNav({className, ...props}: React.HTMLAttributes<HTMLElement>
         >
           Exercises
         </Link>
-        <Link
-          className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-          href="/examples/dashboard"
-        >
-          Profile
-        </Link>
+        <SignedOut>
+          <Link
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+            href="/sign-in"
+          >
+            Login
+          </Link>
+        </SignedOut>
+        <SignedIn>
+          <UserButton afterSignOutUrl="/" />
+        </SignedIn>
       </section>
     </nav>
   );
