@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 "use client";
 
-import type {z} from "zod";
-
+import {set, type z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
+import {useAuth} from "@clerk/nextjs";
+import {useState} from "react";
 
 import {FormSchema} from "@/zod/zod";
+import {supabaseClient} from "@/db/api/server";
 
 import {Input} from "./ui/input";
 import {
@@ -19,8 +21,13 @@ import {
 } from "./ui/select";
 import {Button} from "./ui/button";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "./ui/form";
+import {toast} from "./ui/use-toast";
 
-export default function FormAddExercise() {
+interface FormAddExerciseProps {
+  setOpen: (open: boolean) => void;
+}
+
+export default function FormAddExercise({setOpen}: FormAddExerciseProps) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -30,8 +37,44 @@ export default function FormAddExercise() {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log(data);
+  const {getToken, userId} = useAuth();
+  const [loading, setLoading] = useState(false);
+
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    setLoading(true);
+    const {exerciseCategory, exerciseName, exerciseType} = data;
+
+    try {
+      const supabaseAccessToken = await getToken({template: "gym-log"});
+
+      if (supabaseAccessToken === null) return console.log("No access token");
+      const supabase = await supabaseClient(supabaseAccessToken);
+      const {
+        data: InsertedData,
+        error,
+        status,
+      } = await supabase.from("exercise_list").insert([
+        {
+          name: exerciseName,
+          category: exerciseCategory,
+          type: exerciseType,
+          role: "user",
+          user_id: userId,
+        },
+      ]);
+
+      if (status === 201) {
+        toast({
+          description: "Your exercise has been added",
+        });
+        setOpen(false);
+      }
+    } catch (error) {
+      console.error("Error adding exercise", error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -108,7 +151,7 @@ export default function FormAddExercise() {
           />
         </section>
 
-        <Button type="submit">Add</Button>
+        <Button type="submit">{loading ? "Loading" : "Add"}</Button>
       </form>
     </Form>
   );
