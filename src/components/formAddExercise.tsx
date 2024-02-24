@@ -26,6 +26,7 @@ export default function FormAddExercise() {
     defaultValues: {
       exerciseName: "",
       exerciseCategory: "",
+      exerciseType: "",
     },
   });
 
@@ -53,30 +54,59 @@ export default function FormAddExercise() {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="exerciseCategory"
-          render={({field}) => (
-            <FormItem>
-              <FormLabel>Category</FormLabel>
-              <Select defaultValue={field.value} onValueChange={field.onChange}>
-                <FormControl>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="arms">Arms</SelectItem>
-                    <SelectItem value="legs">Legs</SelectItem>
-                    <SelectItem value="chest">Chest</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
+        <section className="flex flex-col gap-10 sm:flex sm:flex-row sm:justify-between">
+          <FormField
+            control={form.control}
+            name="exerciseCategory"
+            render={({field}) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
+                <Select defaultValue={field.value} onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="arms">Arms</SelectItem>
+                      <SelectItem value="legs">Legs</SelectItem>
+                      <SelectItem value="chest">Chest</SelectItem>
+                      <SelectItem value="back">Back</SelectItem>
+                      <SelectItem value="shoulder">Shoulder</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="exerciseType"
+            render={({field}) => (
+              <FormItem>
+                <FormLabel>Type</FormLabel>
+                <Select defaultValue={field.value} onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select a type" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="Barbell">Barbell</SelectItem>
+                      <SelectItem value="Dumbbell">Dumbbell</SelectItem>
+                      <SelectItem value="Machine">Machine</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </section>
 
         <Button type="submit">Add</Button>
       </form>
