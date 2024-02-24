@@ -1,4 +1,3 @@
-import supabase from "@/db/api/server";
 import {getExercises} from "@/api/getExercises";
 
 import CardExercise from "./card-exercise";
