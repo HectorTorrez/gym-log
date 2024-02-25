@@ -44,7 +44,7 @@ export default function CardExercise({exercise}: {exercise: Exercise[]}) {
               <CardTitle className="h-auto max-w-[70%] text-wrap">
                 {item.name} <span>({item.type})</span>
               </CardTitle>
-              {userId === item.user_id && (
+              {userId === item.user_id && item.user_id !== null && (
                 <AlertDelete
                   textAction="Continue"
                   textButton={<Trash2 color="red" size={20} />}
