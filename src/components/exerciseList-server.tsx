@@ -1,4 +1,4 @@
-import {getExercises} from "@/api/getExercises";
+import {getExercises} from "@/api/route";
 
 import CardExercise from "./card-exercise";
 
