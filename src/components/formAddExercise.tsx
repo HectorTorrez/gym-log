@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 "use client";
 
-import {set, type z} from "zod";
+import {type z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
-import {useAuth} from "@clerk/nextjs";
-import {useState} from "react";
+import {useAuth, useSession} from "@clerk/nextjs";
+import {useEffect, useState} from "react";
+import {useRouter} from "next/navigation";
 
 import {FormSchema} from "@/zod/zod";
 import {supabaseClient} from "@/db/api/server";
@@ -21,7 +22,7 @@ import {
 } from "./ui/select";
 import {Button} from "./ui/button";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "./ui/form";
-import {toast} from "./ui/use-toast";
+import {useToast} from "./ui/use-toast";
 
 interface FormAddExerciseProps {
   setOpen: (open: boolean) => void;
@@ -38,16 +39,35 @@ export default function FormAddExercise({setOpen}: FormAddExerciseProps) {
   });
 
   const {getToken, userId} = useAuth();
+  const {isSignedIn} = useSession();
+
   const [loading, setLoading] = useState(false);
 
+  const {toast} = useToast();
+  const router = useRouter();
+
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    if (isSignedIn === false) {
+      toast({
+        description: "You need to be signed in to add an exercise",
+      });
+
+      return;
+    }
     setLoading(true);
     const {exerciseCategory, exerciseName, exerciseType} = data;
 
     try {
       const supabaseAccessToken = await getToken({template: "gym-log"});
 
-      if (supabaseAccessToken === null) return console.log("No access token");
+      if (supabaseAccessToken === null) {
+        toast({
+          description: "Error adding exercise. Please try again later.",
+        });
+
+        return;
+      }
+
       const supabase = await supabaseClient(supabaseAccessToken);
       const {
         data: InsertedData,
@@ -68,6 +88,7 @@ export default function FormAddExercise({setOpen}: FormAddExerciseProps) {
           description: "Your exercise has been added",
         });
         setOpen(false);
+        router.refresh();
       }
     } catch (error) {
       console.error("Error adding exercise", error);
@@ -76,6 +97,14 @@ export default function FormAddExercise({setOpen}: FormAddExerciseProps) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (isSignedIn === false) {
+      toast({
+        description: "You need to be signed in to add an exercise",
+      });
+    }
+  }, [isSignedIn, toast]);
 
   return (
     <Form {...form}>
@@ -88,9 +117,10 @@ export default function FormAddExercise({setOpen}: FormAddExerciseProps) {
               <FormControl>
                 <Input
                   className={`${form.formState.errors.exerciseName ? "border border-red-400" : ""}`}
+                  maxLength={20}
                   minLength={3}
                   placeholder="Squat"
-                  {...form.register("exerciseName", {required: true})}
+                  {...form.register("exerciseName", {required: true, maxLength: 20, minLength: 3})}
                 />
               </FormControl>
               <FormMessage />
@@ -151,7 +181,9 @@ export default function FormAddExercise({setOpen}: FormAddExerciseProps) {
           />
         </section>
 
-        <Button type="submit">{loading ? "Loading" : "Add"}</Button>
+        <Button className="mt-32" type="submit">
+          {loading ? "Loading" : "Add"}
+        </Button>
       </form>
     </Form>
   );
