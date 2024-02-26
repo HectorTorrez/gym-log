@@ -4,9 +4,10 @@ import type {Exercise} from "@/types/exercise";
 
 import {Trash2} from "lucide-react";
 import {useAuth} from "@clerk/nextjs";
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 
 import {supabaseClient} from "@/db/api/server";
+import {mock} from "@/api/mock";
 
 import {Card, CardDescription, CardTitle} from "./ui/card";
 import {AlertDelete} from "./alert-delete";
@@ -15,6 +16,20 @@ import {toast} from "./ui/use-toast";
 export default function CardExercise({exercise}: {exercise: Exercise[]}) {
   const {userId, getToken} = useAuth();
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams);
+
+  const name = searchParams.get("name");
+  const category = searchParams.get("category");
+
+  const filteredExercise = mock.filter((item) => {
+    const filterByCategory = item.category.toLowerCase().includes(category?.toLowerCase() ?? "");
+
+    const filterByName = item.name.toLowerCase().includes(name?.toLowerCase() ?? "");
+
+    return filterByCategory && filterByName;
+  });
 
   const handleDeleteExercise = async (id: string) => {
     const supabaseAccessToken = await getToken({template: "gym-log"});
@@ -37,7 +52,7 @@ export default function CardExercise({exercise}: {exercise: Exercise[]}) {
 
   return (
     <>
-      {exercise.map((item) => {
+      {filteredExercise.map((item) => {
         return (
           <Card key={item.id} className="flex flex-col gap-3 px-4 py-4">
             <section className="flex items-center justify-between text-wrap">
