@@ -147,7 +147,7 @@ export default function FormAddExercise({setOpen}: FormAddExerciseProps) {
                       <SelectItem value="legs">Legs</SelectItem>
                       <SelectItem value="chest">Chest</SelectItem>
                       <SelectItem value="back">Back</SelectItem>
-                      <SelectItem value="shoulder">Shoulder</SelectItem>
+                      <SelectItem value="shoulders">Shoulders</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
