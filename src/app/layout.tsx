@@ -1,9 +1,9 @@
 import type {Metadata} from "next";
 
 import "./globals.css";
-import {MainNav} from "@/components/navbar";
+
 import AuthProvider from "@/auth/provider";
-import {Toaster} from "@/components/ui/toaster";
+import {Navbar} from "@/components/navbar";
 
 export const metadata: Metadata = {
   title: "gym-log",
@@ -15,11 +15,10 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     <html lang="en">
       <body className="dark bg-background   font-sans antialiased">
         <AuthProvider>
-          <header className="text-xl font-bold leading-[4rem]">
-            <MainNav className="my-5  justify-between px-4" />
+          <header>
+            <Navbar />
           </header>
           <main className="px-4">{children}</main>
-          <Toaster />
         </AuthProvider>
       </body>
     </html>
