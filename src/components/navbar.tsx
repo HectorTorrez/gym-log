@@ -1,3 +1,4 @@
+import {SignInButton, SignedIn, SignedOut, UserButton} from "@clerk/nextjs";
 import {BookDashed, Dumbbell} from "lucide-react";
 import Link from "next/link";
 
@@ -17,6 +18,12 @@ export function Navbar() {
           <BookDashed className="h-5 w-5" />
           <span className="hidden md:block">Templates</span>
         </Link>
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
       </section>
     </nav>
   );

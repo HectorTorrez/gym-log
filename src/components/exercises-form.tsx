@@ -11,6 +11,7 @@ import {useEffect} from "react";
 
 import {Button} from "@/components/ui/button";
 import {Form} from "@/components/ui/form";
+import supabase from "@/db/api/client";
 
 import {Set} from "./set-form";
 
@@ -22,8 +23,8 @@ export const formSchema = z.object({
         name: z.string(),
         sets: z.array(
           z.object({
-            weight: z.coerce.number().positive(),
-            reps: z.coerce.number().positive(),
+            weight: z.coerce.number().nonnegative(),
+            reps: z.coerce.number().nonnegative(),
           }),
         ),
       })
@@ -34,9 +35,14 @@ export const formSchema = z.object({
 interface ExerciseFormProps {
   handleDeleteExercise: (id: string) => void;
   exercisesList: ExerciseList[];
+  templateName: string;
 }
 
-export function ExerciseForm({exercisesList, handleDeleteExercise}: ExerciseFormProps) {
+export function ExerciseForm({
+  exercisesList,
+  handleDeleteExercise,
+  templateName,
+}: ExerciseFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -48,9 +54,22 @@ export function ExerciseForm({exercisesList, handleDeleteExercise}: ExerciseForm
 
   // const onInvalid = (errors) => console.log(errors);
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+
+    // values.exercises.forEach(async (exercise) => {
+    //   const {data, error} = await supabase.from("exercise").insert([
+    //     {
+    //       id: exercise?.id,
+    //       name: exercise?.name,
+    //     },
+    //   ]);
+    // });
+
+    // const {data, error} = await supabase.from("exercise").insert([]);
+
+    console.log(templateName);
     console.log(values);
   };
 

@@ -38,7 +38,9 @@ export default function CreateTemplates() {
         <DialogHeader className="mt-10 flex flex-col gap-7">
           <DialogTitle>
             <Input
+              required
               className="w-full border border-b-2 border-l-0 border-r-0 border-t-0 "
+              placeholder="Template name"
               value={templateName}
               onChange={(e) => setTemplateName(e.target.value)}
             />
@@ -49,6 +51,7 @@ export default function CreateTemplates() {
             <ExerciseForm
               exercisesList={exercisesList}
               handleDeleteExercise={handleDeleteExercise}
+              templateName={templateName}
             />
           </DialogDescription>
         </DialogHeader>
