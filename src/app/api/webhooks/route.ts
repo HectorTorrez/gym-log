@@ -55,14 +55,16 @@ export async function POST(req: Request) {
   const {id} = evt.data;
   const eventType = evt.type;
 
-  const {data, error} = await supabase.from("users").insert([
-    {
-      user_id: id,
-      email: evt.data.email_addresses[0]?.email_address ?? "no email",
-    },
-  ]);
-
-  console.log({error});
+  if (eventType === "user.created") {
+    await supabase.from("users").insert([
+      {
+        user_id: id,
+        email: evt.data.email_addresses[0]?.email_address ?? "no email",
+      },
+    ]);
+  } else if (eventType === "user.deleted") {
+    await supabase.from("users").delete().match({user_id: id});
+  }
 
   // console.log(`Webhook with and ID of ${id} and type of ${eventType}`);
   // console.log("Webhook body:", body);

@@ -1,8 +1,11 @@
-import {SignInButton, SignedIn, SignedOut, UserButton} from "@clerk/nextjs";
+"use client";
+import {SignInButton, SignedIn, SignedOut, UserButton, useUser} from "@clerk/nextjs";
 import {BookDashed, Dumbbell} from "lucide-react";
 import Link from "next/link";
 
 export function Navbar() {
+  const {user} = useUser();
+
   return (
     <nav className="flex items-center justify-between bg-gray-800 p-2">
       <section>
@@ -18,9 +21,8 @@ export function Navbar() {
           <BookDashed className="h-5 w-5" />
           <span className="hidden md:block">Templates</span>
         </Link>
-        <SignedOut>
-          <SignInButton />
-        </SignedOut>
+        {!user && <SignInButton />}
+
         <SignedIn>
           <UserButton />
         </SignedIn>
