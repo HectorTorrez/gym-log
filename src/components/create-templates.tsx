@@ -2,6 +2,7 @@
 import type {ExerciseList} from "@/types/exercise";
 
 import {useState} from "react";
+import {DialogClose} from "@radix-ui/react-dialog";
 
 import {
   Dialog,
@@ -19,6 +20,9 @@ import {ExerciseForm} from "./exercises-form";
 export default function CreateTemplates() {
   const [templateName, setTemplateName] = useState("Template name");
   const [exercisesList, setExercisesList] = useState<ExerciseList[]>([]);
+
+  const [open, setOpen] = useState(false);
+
   const handleListExercises = (exercises: ExerciseList[]) => {
     setExercisesList([...exercisesList, ...exercises]);
   };
@@ -29,8 +33,13 @@ export default function CreateTemplates() {
     setExercisesList(newExercisesList);
   };
 
+  const handleClearTemplate = () => {
+    setTemplateName("Template name");
+    setExercisesList([]);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="mt-3 w-full rounded-lg border border-gray-50 p-3">
         Create template
       </DialogTrigger>
@@ -50,7 +59,9 @@ export default function CreateTemplates() {
 
             <ExerciseForm
               exercisesList={exercisesList}
+              handleClearTemplate={handleClearTemplate}
               handleDeleteExercise={handleDeleteExercise}
+              setOpen={setOpen}
               templateName={templateName}
             />
           </DialogDescription>

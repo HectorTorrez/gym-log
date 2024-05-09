@@ -2,7 +2,7 @@
 
 import type {ExerciseList} from "@/types/exercise";
 
-import {useState} from "react";
+import {Suspense, useState} from "react";
 
 import {ToggleGroup, ToggleGroupItem} from "@/components/ui/toggle-group";
 import {useGetExercises} from "@/hooks/useGetExercises";
@@ -10,6 +10,7 @@ import {useGetExercises} from "@/hooks/useGetExercises";
 import {Button} from "./ui/button";
 import {Input} from "./ui/input";
 import {DialogClose} from "./ui/dialog";
+import {Skeleton} from "./ui/skeleton";
 
 interface ChooseExercisesProps {
   handleListExercises: (exercises: ExerciseList[]) => void;
