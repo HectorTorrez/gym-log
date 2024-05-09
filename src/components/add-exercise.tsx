@@ -1,5 +1,9 @@
 "use client";
 
+import type {ExerciseList} from "@/types/exercise";
+
+import {useState} from "react";
+
 import {
   Dialog,
   DialogContent,
@@ -11,7 +15,11 @@ import {
 
 import ChooseExercise from "./choose-exercise";
 
-export default function AddExercise() {
+interface AddExerciseProps {
+  handleListExercises: (exercises: ExerciseList[]) => void;
+}
+
+export default function AddExercise({handleListExercises}: AddExerciseProps) {
   return (
     <Dialog>
       <DialogTrigger className="w-full rounded-lg border border-gray-50 bg-white p-3 font-bold text-black">
@@ -21,7 +29,7 @@ export default function AddExercise() {
         <DialogHeader className="mt-10">
           <DialogTitle />
           <DialogDescription>
-            <ChooseExercise />
+            <ChooseExercise handleListExercises={handleListExercises} />
           </DialogDescription>
         </DialogHeader>
       </DialogContent>

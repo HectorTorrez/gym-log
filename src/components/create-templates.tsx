@@ -1,4 +1,6 @@
 "use client";
+import type {ExerciseList} from "@/types/exercise";
+
 import {useState} from "react";
 
 import {
@@ -12,9 +14,20 @@ import {
 
 import {Input} from "./ui/input";
 import AddExercise from "./add-exercise";
+import {ExerciseForm} from "./exercises-form";
 
 export default function CreateTemplates() {
-  const [templateName, setTemplateName] = useState("");
+  const [templateName, setTemplateName] = useState("Template name");
+  const [exercisesList, setExercisesList] = useState<ExerciseList[]>([]);
+  const handleListExercises = (exercises: ExerciseList[]) => {
+    setExercisesList([...exercisesList, ...exercises]);
+  };
+
+  const handleDeleteExercise = (id: string) => {
+    const newExercisesList = exercisesList.filter((exercise) => exercise.id === id);
+
+    setExercisesList(newExercisesList);
+  };
 
   return (
     <Dialog>
@@ -25,13 +38,18 @@ export default function CreateTemplates() {
         <DialogHeader className="mt-10 flex flex-col gap-7">
           <DialogTitle>
             <Input
-              className="w-full outline-none "
+              className="w-full border border-b-2 border-l-0 border-r-0 border-t-0 "
               value={templateName}
               onChange={(e) => setTemplateName(e.target.value)}
             />
           </DialogTitle>
           <DialogDescription>
-            <AddExercise />
+            <AddExercise handleListExercises={handleListExercises} />
+
+            <ExerciseForm
+              exercisesList={exercisesList}
+              handleDeleteExercise={handleDeleteExercise}
+            />
           </DialogDescription>
         </DialogHeader>
       </DialogContent>

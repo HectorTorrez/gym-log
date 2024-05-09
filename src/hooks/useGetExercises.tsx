@@ -1,11 +1,11 @@
-import type {Exercise} from "@/types/exercise";
+import type {FechExercise} from "@/types/exercise";
 
 import {useState, useEffect} from "react";
 
 import supabase from "@/db/api/client";
 
 export function useGetExercises() {
-  const [data, setData] = useState<Exercise[] | null>(null);
+  const [data, setData] = useState<FechExercise[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = async () => {
