@@ -26,8 +26,7 @@ export default function AddExercise({handleListExercises}: AddExerciseProps) {
         Add exercise
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader className="mt-10">
-          <DialogTitle />
+        <DialogHeader className="mb-10 mt-10">
           <DialogDescription>
             <ChooseExercise handleListExercises={handleListExercises} />
           </DialogDescription>

@@ -9,7 +9,7 @@ export function useGetExercises() {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = async () => {
-    const {data} = await supabase
+    const {data, error} = await supabase
       .from("exercise_list")
       .select()
       .order("created_at", {ascending: false});
