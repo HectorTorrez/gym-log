@@ -7,7 +7,7 @@ export function Navbar() {
   const {user} = useUser();
 
   return (
-    <nav className="flex items-center justify-between bg-gray-800 p-2">
+    <nav className="sticky top-0 flex w-full items-center justify-between bg-gray-800 p-2">
       <section>
         <Link href="/">Home</Link>
       </section>
@@ -17,7 +17,7 @@ export function Navbar() {
           <Dumbbell className="h-5 w-5" />
           <span className="hidden md:block">Workouts</span>
         </Link>
-        <Link className="flex items-center gap-1" href="/templates">
+        <Link className="flex items-center gap-1" href="/workout-history">
           <BookDashed className="h-5 w-5" />
           <span className="hidden md:block">Templates</span>
         </Link>

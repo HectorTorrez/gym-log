@@ -171,19 +171,20 @@ export function ExerciseForm({
         />
       ) : null}
       <form className="mb-10 mt-10 flex flex-col gap-5" onSubmit={form.handleSubmit(onSubmit)}>
-        {fields.map((exercise, index) => {
-          return (
-            <Set
-              key={exercise.id}
-              control={form.control as unknown as Control}
-              exercise={exercise}
-              handleDeleteExercise={handleDeleteExercise}
-              index={index}
-              removeExercise={remove}
-            />
-          );
-        })}
-
+        <section className="flex max-h-[340px] flex-col gap-5 overflow-y-auto">
+          {fields.map((exercise, index) => {
+            return (
+              <Set
+                key={exercise.id}
+                control={form.control as unknown as Control}
+                exercise={exercise}
+                handleDeleteExercise={handleDeleteExercise}
+                index={index}
+                removeExercise={remove}
+              />
+            );
+          })}
+        </section>
         <Button
           disabled={
             Object.keys(values).length === 0 ||
