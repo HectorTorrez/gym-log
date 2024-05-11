@@ -124,6 +124,7 @@ export function Set({control, exercise, index, removeExercise, handleDeleteExerc
 
       <Button
         className="h-7"
+        type="button"
         variant="secondary"
         onClick={() => append({id: crypto.randomUUID(), weight: 0, reps: 0})}
       >
