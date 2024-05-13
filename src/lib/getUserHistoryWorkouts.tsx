@@ -9,12 +9,23 @@ export const dynamic = "force-dynamic";
 export async function getUsersHistoryWorkouts() {
   const {userId} = auth();
 
+  console.log({userId});
   if (!userId) return null;
   try {
     const {data: template} = await supabase
       .from("template")
       .select("*, exercise(*, sets(*))")
-      .eq("user_id", userId ? userId : "");
+      .eq("user_id", userId ? userId : "")
+      .order("created_at", {ascending: true});
+
+    if (template) {
+      template.forEach((t) => {
+        t.exercise.sort((a, b) => Number(a.created_at) - Number(b.created_at));
+        t.exercise.forEach((e) => {
+          e.sets.sort((a, b) => a.set - b.set);
+        });
+      });
+    }
 
     return template;
   } catch (error) {

@@ -1,7 +1,7 @@
 "use client";
 import type {ExerciseList} from "@/types/exercise";
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {DialogClose} from "@radix-ui/react-dialog";
 
 import {
@@ -17,7 +17,18 @@ import {Input} from "./ui/input";
 import AddExercise from "./add-exercise";
 import {ExerciseForm} from "./exercises-form";
 
-export default function CreateTemplates() {
+interface CreateTemplatesProps {
+  isEditing: boolean;
+  templateId?: string;
+  isEditingTemplateName?: string;
+  isEditingExercises?: ExerciseList[];
+}
+
+export default function CreateTemplates({
+  isEditing,
+  isEditingExercises,
+  isEditingTemplateName,
+}: CreateTemplatesProps) {
   const [templateName, setTemplateName] = useState("Template name");
   const [exercisesList, setExercisesList] = useState<ExerciseList[]>([]);
 
@@ -38,11 +49,29 @@ export default function CreateTemplates() {
     setExercisesList([]);
   };
 
+  useEffect(() => {
+    if (isEditing && isEditingTemplateName && isEditingExercises) {
+      setTemplateName(isEditingTemplateName);
+      setExercisesList(isEditingExercises);
+    }
+  }, [isEditing, isEditingTemplateName, isEditingExercises]);
+
+  useEffect(() => {
+    if (!open && !isEditing) {
+      handleClearTemplate();
+    }
+  }, [open, isEditing]);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="mt-3 w-full rounded-lg border border-gray-50 p-3">
-        Create template
-      </DialogTrigger>
+      {isEditing ? (
+        <DialogTrigger className="w-[100px]   text-blue-400">Edit template</DialogTrigger>
+      ) : (
+        <DialogTrigger className="mt-3 w-full rounded-lg border border-gray-50 p-3">
+          Create template
+        </DialogTrigger>
+      )}
+
       <DialogContent>
         <DialogHeader className="mt-10 flex flex-col gap-7">
           <DialogTitle>
@@ -58,9 +87,11 @@ export default function CreateTemplates() {
             <AddExercise handleListExercises={handleListExercises} />
 
             <ExerciseForm
-              exercisesList={exercisesList}
+              exercisesList={isEditing ? isEditingExercises ?? exercisesList : exercisesList}
               handleClearTemplate={handleClearTemplate}
               handleDeleteExercise={handleDeleteExercise}
+              isEditing={isEditing}
+              open={open}
               setOpen={setOpen}
               templateName={templateName}
             />

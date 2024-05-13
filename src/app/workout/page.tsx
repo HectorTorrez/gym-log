@@ -5,7 +5,7 @@ export default function Workoutpage() {
     <section>
       <h2 className="mt-3 text-xl font-bold">Templates</h2>
       <section>
-        <CreateTemplates />
+        <CreateTemplates isEditing={false} />
       </section>
     </section>
   );

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 "use client";
 
@@ -25,10 +26,14 @@ export const formSchema = z.object({
       .object({
         id: z.string().optional(),
         name: z.string(),
+        template_id: z.string().optional(),
+        set: z.string().optional(),
         sets: z.array(
           z.object({
+            id: z.string().optional(),
             weight: z.coerce.number().nonnegative(),
             reps: z.coerce.number().nonnegative(),
+            set: z.coerce.number().optional(),
           }),
         ),
       })
@@ -42,6 +47,8 @@ interface ExerciseFormProps {
   templateName: string;
   setOpen: (open: boolean) => void;
   handleClearTemplate: () => void;
+  isEditing?: boolean;
+  open: boolean;
 }
 
 export function ExerciseForm({
@@ -50,6 +57,8 @@ export function ExerciseForm({
   templateName,
   setOpen,
   handleClearTemplate,
+  isEditing,
+  open,
 }: ExerciseFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -69,6 +78,7 @@ export function ExerciseForm({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setOpen(true);
     setLoading(true);
+
     try {
       const {data: templateData, error: templateError} = await supabase
         .from("template")
@@ -84,6 +94,16 @@ export function ExerciseForm({
 
       if (!templateError) {
         values.exercises.forEach(async (exercise) => {
+          const {data: exerciseData} = await supabase
+            .from("exercise")
+            .insert([
+              {
+                name: exercise?.name || "",
+                template_id: templateData[0].id,
+              },
+            ])
+            .select("id");
+
           exercise?.sets.forEach(async (set, index) => {
             const {data, error} = await supabase
               .from("sets")
@@ -92,34 +112,94 @@ export function ExerciseForm({
                   weight: set.weight,
                   reps: set.reps,
                   set: index + 1,
+                  exercise_id: exerciseData?.[0]?.id ?? "", // Add null check here
                 },
               ])
               .select("id");
+          });
+        });
+      }
+      setLoading(false);
+      handleClearTemplate();
+      setOpen(false);
+    } catch (error) {
+      setError(true);
+      setOpen(true);
+      setLoading(false);
+    }
+  };
+
+  const onEdit = async (values: z.infer<typeof formSchema>) => {
+    setOpen(true);
+    setLoading(true);
+    try {
+      const {data: templateData, error: templateError} = await supabase
+        .from("template")
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-expect-error
+        .upsert(
+          [
+            {
+              id: values.exercises[0] ? values.exercises[0].template_id ?? "" : "",
+              name: templateName.length === 0 ? "Template name" : templateName,
+              user_id: user?.id,
+            },
+          ],
+          {
+            unique: "id",
+          },
+        );
+
+      if (templateError) {
+        console.error(templateError);
+        throw templateError;
+      }
+
+      console.log({templateError});
+
+      if (!templateError) {
+        values.exercises.forEach(async (exercise) => {
+          exercise?.sets.forEach(async (set) => {
+            const {data, error} = await supabase.from("sets").upsert(
+              [
+                {
+                  id: set.id,
+                  weight: set.weight,
+                  reps: set.reps,
+                  set: set.set || 0,
+                  exercise_id: exercise.id,
+                },
+              ],
+              {
+                unique: "id",
+              },
+            );
+
+            console.log({data});
+
+            if (error) {
+              console.error(error);
+              throw error;
+            }
 
             if (!error) {
-              await supabase
-                .from("exercise")
-                .insert([
+              const {error: exerciseError} = await supabase.from("exercise").upsert(
+                [
                   {
+                    id: exercise.id,
                     name: exercise.name,
-                    set: data[0].id,
-                    template_id: templateData[0].id,
+                    template_id: exercise.template_id || "",
                   },
-                ])
-                .select("id");
+                ],
+                {
+                  unique: "id",
+                },
+              );
 
-              // if (!exerciseError) {
-              //   const {data: userExercise, error: userExerciseError} = await supabase
-              //     .from("user_exercises")
-              //     .insert([
-              //       {
-              //         exercise_id: exerciseData[0].id,
-              //         user_id: user?.id,
-              //       },
-              //     ]);
-
-              //   console.log({userExerciseError});
-              // }
+              if (exerciseError) {
+                console.error(exerciseError);
+                throw exerciseError;
+              }
             }
           });
         });
@@ -135,20 +215,47 @@ export function ExerciseForm({
   };
 
   useEffect(() => {
-    // if (exercisesList.length > 0) {
-    form.setValue(
-      "exercises",
+    if (isEditing) {
+      form.setValue(
+        "exercises",
+        exercisesList.map((exercise) => {
+          return {
+            name: exercise.name,
+            sets: exercise.sets.map((set) => {
+              return {
+                id: set.id,
+                weight: set.weight,
+                reps: set.reps,
+                exercise_id: set.exercise_id,
+                ...(isEditing ? {set: set.set} : {}),
+              };
+            }),
+            id: exercise.id,
+            template_id: exercise.template_id,
+          };
+        }),
+      );
+    } else {
+      form.setValue(
+        "exercises",
+        exercisesList.map((exercise) => {
+          return {
+            id: exercise.id,
+            template_id: exercise.template_id,
+            name: exercise.name,
 
-      exercisesList.map((exercise) => {
-        return {
-          name: exercise.name,
-          sets: [{id: crypto.randomUUID(), weight: 0, reps: 0}],
-        };
-      }),
-    );
-    // }
+            sets: [
+              {
+                weight: 0,
+                reps: 0,
+              },
+            ],
+          };
+        }),
+      );
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exercisesList]);
+  }, [exercisesList, isEditing, open]);
 
   useEffect(() => {
     if (error) {
@@ -170,7 +277,10 @@ export function ExerciseForm({
           title="Error"
         />
       ) : null}
-      <form className="mb-10 mt-10 flex flex-col gap-5" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="mb-10 mt-10 flex flex-col gap-5"
+        onSubmit={isEditing ? form.handleSubmit(onEdit) : form.handleSubmit(onSubmit)}
+      >
         <section className="flex max-h-[340px] flex-col gap-5 overflow-y-auto">
           {fields.map((exercise, index) => {
             return (
@@ -195,7 +305,7 @@ export function ExerciseForm({
           }
           type="submit"
         >
-          {loading ? <Loader /> : " Create template"}
+          {loading ? <Loader /> : isEditing ? "Edit" : "Create"}
         </Button>
       </form>
     </Form>

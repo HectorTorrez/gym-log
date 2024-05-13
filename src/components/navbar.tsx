@@ -7,7 +7,7 @@ export function Navbar() {
   const {user} = useUser();
 
   return (
-    <nav className="sticky top-0 flex w-full items-center justify-between bg-gray-800 p-2">
+    <nav className="fixed top-0 z-50 flex w-full items-center justify-between bg-gray-800 p-2">
       <section>
         <Link href="/">Home</Link>
       </section>

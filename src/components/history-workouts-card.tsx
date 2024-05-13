@@ -2,6 +2,7 @@ import type {
   CardBodyProps,
   HistoryWorkoutsCardPropsWithClassName,
 } from "@/types/historyWorkoutsType";
+import type {Set} from "@/types/exercise";
 
 import React from "react";
 
@@ -29,17 +30,25 @@ export function HistoryWorkoutsCard(props: HistoryWorkoutsCardPropsWithClassName
 export function CardBody({exercise}: CardBodyProps) {
   const {name, sets} = exercise;
 
+  const setsTyped = sets as unknown as Set[];
+
   return (
     <section className="flex flex-col ">
       <p>{name}</p>
-      <section className="flex items-center gap-1">
-        <p>{sets?.set}</p>
-        <p>
-          {sets?.weight}
-          kg
-        </p>
-        <p>x</p>
-        <p>{sets?.reps}</p>
+      <section className="flex flex-col items-start gap-1">
+        {setsTyped.map((set: Set) => {
+          return (
+            <section key={set.id} className="flex items-center gap-1">
+              <p>{set.set}</p>
+              <p>
+                {set.weight}
+                kg
+              </p>
+              <p>x</p>
+              <p>{set.reps}</p>
+            </section>
+          );
+        })}
       </section>
     </section>
   );

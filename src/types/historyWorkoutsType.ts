@@ -7,15 +7,17 @@ export interface HistoryWorkoutsCardProps {
     created_at: string;
     id: string;
     name: string;
-    set: string;
     template_id: string;
-    sets: {
-      created_at: string;
-      id: string;
-      reps: number;
-      set: number;
-      weight: number;
-    } | null;
+    sets:
+      | {
+          created_at: string;
+          id: string;
+          reps: number;
+          set: number;
+          weight: number;
+          exercise_id: string;
+        }[]
+      | null;
   }[];
 }
 
@@ -24,15 +26,17 @@ export interface CardBodyProps {
     created_at: string;
     id: string;
     name: string;
-    set: string;
     template_id: string;
-    sets: {
-      created_at: string;
-      id: string;
-      reps: number;
-      set: number;
-      weight: number;
-    } | null;
+    sets:
+      | {
+          created_at: string;
+          id: string;
+          reps: number;
+          set: number;
+          weight: number;
+          exercise_id: string;
+        }[]
+      | null;
   };
 }
 

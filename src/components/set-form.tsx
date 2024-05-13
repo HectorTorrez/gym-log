@@ -55,72 +55,74 @@ export function Set({control, exercise, index, removeExercise, handleDeleteExerc
         />
       </section>
 
-      {fields.map((setField, setIndex) => (
-        <section key={setField.id} className="ustify-center grid grid-cols-4 gap-5">
-          <FormField
-            control={control}
-            defaultValue={setIndex + 1}
-            name={`exercises.${index}.sets.${setIndex}.set`}
-            render={({field}) => (
-              <FormItem>
-                <FormLabel>Set</FormLabel>
-                <FormControl>
-                  <Input
-                    className="flex items-center justify-center text-center"
-                    type="number"
-                    {...field}
-                    disabled
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            defaultValue={setField.weight}
-            name={`exercises.${index}.sets.${setIndex}.weight`}
-            render={({field}) => (
-              <FormItem>
-                <FormLabel>Weight</FormLabel>
-                <FormControl>
-                  <Input
-                    className="flex items-center justify-center text-center"
-                    type="number"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            defaultValue={setField.reps}
-            name={`exercises.${index}.sets.${setIndex}.reps`}
-            render={({field}) => (
-              <FormItem>
-                <FormLabel>Reps</FormLabel>
-                <FormControl>
-                  <Input
-                    className="flex items-center justify-center text-center"
-                    type="number"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <section className="flex items-center justify-center">
-            <DeleteSet
-              onRemove={() => {
-                remove(setIndex);
-              }}
+      {fields.map((setField, setIndex) => {
+        return (
+          <section key={setField.id} className="ustify-center grid grid-cols-4 gap-5">
+            <FormField
+              control={control}
+              defaultValue={setIndex + 1}
+              name={`exercises.${index}.sets.${setIndex}.set`}
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Set</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="flex items-center justify-center text-center"
+                      type="number"
+                      {...field}
+                      disabled
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
+            <FormField
+              control={control}
+              defaultValue={setField.weight}
+              name={`exercises.${index}.sets.${setIndex}.weight`}
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Weight</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="flex items-center justify-center text-center"
+                      type="number"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              defaultValue={setField.reps}
+              name={`exercises.${index}.sets.${setIndex}.reps`}
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Reps</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="flex items-center justify-center text-center"
+                      type="number"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <section className="flex items-center justify-center">
+              <DeleteSet
+                onRemove={() => {
+                  remove(setIndex);
+                }}
+              />
+            </section>
           </section>
-        </section>
-      ))}
+        );
+      })}
 
       <Button
         className="h-7"

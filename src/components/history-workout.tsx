@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -11,6 +12,7 @@ import {
 import {formatDate} from "@/lib/formatDate";
 
 import {HistoryWorkoutsCard} from "./history-workouts-card";
+import CreateTemplates from "./create-templates";
 
 export function HistoryWorkout(props: HistoryWorkoutsCardProps) {
   return (
@@ -21,14 +23,23 @@ export function HistoryWorkout(props: HistoryWorkoutsCardProps) {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          {/* <DialogTitle>Are you absolutely sure?</DialogTitle> */}
+          <CreateTemplates
+            isEditing
+            isEditingExercises={props.exercise}
+            isEditingTemplateName={props.name}
+            templateId={props.id}
+          />
+
           <DialogDescription>
             <HistoryWorkoutsCard
               {...props}
               className="text-start"
-              contentClassName="flex flex-col gap-3"
+              contentClassName="flex flex-col gap-3 max-h-[300px] overflow-y-auto"
             />
           </DialogDescription>
+          {/* <DialogFooter>
+            <CreateTemplates isEditing />
+          </DialogFooter> */}
         </DialogHeader>
       </DialogContent>
     </Dialog>
