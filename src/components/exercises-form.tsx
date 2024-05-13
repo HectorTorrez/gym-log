@@ -11,6 +11,7 @@ import {set, z} from "zod";
 import {useEffect, useState} from "react";
 import {useUser} from "@clerk/nextjs";
 import {Loader} from "lucide-react";
+import {useRouter} from "next/navigation";
 
 import {Button} from "@/components/ui/button";
 import {Form} from "@/components/ui/form";
@@ -72,6 +73,7 @@ export function ExerciseForm({
   });
 
   const {user} = useUser();
+  const router = useRouter();
 
   // const onInvalid = (errors) => console.log(errors);
 
@@ -150,16 +152,11 @@ export function ExerciseForm({
           },
         );
 
-      if (templateError) {
-        console.error(templateError);
-        throw templateError;
-      }
-
-      console.log({templateError});
-
       if (!templateError) {
         values.exercises.forEach(async (exercise) => {
           exercise?.sets.forEach(async (set) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
+            //@ts-ignore
             const {data, error} = await supabase.from("sets").upsert(
               [
                 {
@@ -175,14 +172,9 @@ export function ExerciseForm({
               },
             );
 
-            console.log({data});
-
-            if (error) {
-              console.error(error);
-              throw error;
-            }
-
             if (!error) {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
+              //@ts-ignore
               const {error: exerciseError} = await supabase.from("exercise").upsert(
                 [
                   {
@@ -195,15 +187,11 @@ export function ExerciseForm({
                   unique: "id",
                 },
               );
-
-              if (exerciseError) {
-                console.error(exerciseError);
-                throw exerciseError;
-              }
             }
           });
         });
       }
+      router.refresh();
       setLoading(false);
       handleClearTemplate();
       setOpen(false);

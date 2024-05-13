@@ -31,21 +31,23 @@ export interface Exercise {
 export interface Exercises {
   id?: string;
   name: string;
+  created_at?: string;
+  template_id?: string;
   sets: Set[];
 }
 
 export interface Set {
-  // created_at?: string;
-  // id?: string;
-  // weight: number;
-  // reps: number;
-  // set?: number;
-  // exercise_id?: string;
-
-  created_at: string;
-  exercise_id: string;
-  id: string;
-  reps: number;
-  set: number;
+  created_at?: string;
+  id?: string;
   weight: number;
+  reps: number;
+  set?: number;
+  exercise_id?: string;
+
+  // created_at: string;
+  // exercise_id: string;
+  // id: string;
+  // reps: number;
+  // set: number;
+  // weight: number;
 }

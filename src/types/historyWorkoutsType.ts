@@ -8,16 +8,14 @@ export interface HistoryWorkoutsCardProps {
     id: string;
     name: string;
     template_id: string;
-    sets:
-      | {
-          created_at: string;
-          id: string;
-          reps: number;
-          set: number;
-          weight: number;
-          exercise_id: string;
-        }[]
-      | null;
+    sets: {
+      created_at: string;
+      id: string;
+      reps: number;
+      set: number;
+      weight: number;
+      exercise_id: string;
+    }[];
   }[];
 }
 

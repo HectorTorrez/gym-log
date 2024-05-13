@@ -4,15 +4,17 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {formatDate} from "@/lib/formatDate";
 
 import {HistoryWorkoutsCard} from "./history-workouts-card";
 import CreateTemplates from "./create-templates";
+
+export const revalidate = 1;
+
+export const dynamic = "force-dynamic";
 
 export function HistoryWorkout(props: HistoryWorkoutsCardProps) {
   return (

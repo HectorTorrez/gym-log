@@ -9,7 +9,6 @@ export const dynamic = "force-dynamic";
 export async function getUsersHistoryWorkouts() {
   const {userId} = auth();
 
-  console.log({userId});
   if (!userId) return null;
   try {
     const {data: template} = await supabase
