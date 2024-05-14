@@ -33,12 +33,16 @@ export default function FilterExercises({
         value={inputValue}
         onChange={(e) => onInputChange(e.target.value)}
       />
-      <section className="flex gap-5">
+      <section className="flex flex-col gap-5 sm:flex-row">
         <section>
-          <CategorySelected options={category} onCategoryChange={onCategoryChange} />
+          <CategorySelected
+            isCreate={false}
+            options={category}
+            onCategoryChange={onCategoryChange}
+          />
         </section>
         <section>
-          <TypeSelected options={type} onTypeChange={onTypeChange} />
+          <TypeSelected isCreate={false} options={type} onTypeChange={onTypeChange} />
         </section>
       </section>
     </form>

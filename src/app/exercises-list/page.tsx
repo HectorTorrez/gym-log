@@ -2,6 +2,7 @@ import React from "react";
 import {currentUser} from "@clerk/nextjs";
 
 import {getExercises} from "@/lib/getExercises";
+import CreateExercise from "@/components/create-exercise";
 
 import ExerciseListClient from "./page.client";
 
@@ -15,5 +16,12 @@ export default async function ExerciseListPage() {
   if (!user) return null;
   const exercises = await getExercises(user.id);
 
-  return <ExerciseListClient exercises={exercises} />;
+  return (
+    <section>
+      <section className="mt-3">
+        <CreateExercise />
+      </section>
+      <ExerciseListClient exercises={exercises} />
+    </section>
+  );
 }

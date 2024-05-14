@@ -53,8 +53,8 @@ export default function ExerciseListClient({exercises}: ExerciseListClientProps)
         onInputChange={onInputChange}
         onTypeChange={onTypeChange}
       />
-      <section className="flex max-h-[calc(100vh-200px)] flex-col gap-5 overflow-y-auto">
-        {/* {filteredExercises === null && <div>No exercises found</div>} */}
+      <section className="flex max-h-[calc(100vh-400px)] flex-col gap-5 overflow-y-auto">
+        {!filteredExercises?.length && <div>No exercises found</div>}
         {filteredExercises?.map((exercise) => {
           return (
             <Suspense key={exercise.id} fallback={<div>Loading...</div>}>

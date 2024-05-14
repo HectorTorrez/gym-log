@@ -11,9 +11,10 @@ import {
 interface TypeCategoryProps {
   onCategoryChange: (value: string) => void;
   options: Category[];
+  isCreate: boolean;
 }
 
-export function CategorySelected({onCategoryChange, options}: TypeCategoryProps) {
+export function CategorySelected({onCategoryChange, options, isCreate}: TypeCategoryProps) {
   const uniqueOptions = options.filter(
     (v, i, a) => a.findIndex((t) => t.category === v.category) === i,
   );
@@ -21,10 +22,10 @@ export function CategorySelected({onCategoryChange, options}: TypeCategoryProps)
   return (
     <Select onValueChange={onCategoryChange}>
       <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Select a type" />
+        <SelectValue placeholder="Select a category" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="all">All</SelectItem>
+        {isCreate ? null : <SelectItem value="all">All</SelectItem>}
         {uniqueOptions.map((option) => {
           return (
             <SelectItem key={crypto.randomUUID()} value={option.category}>

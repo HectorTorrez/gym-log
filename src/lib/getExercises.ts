@@ -7,16 +7,16 @@ export const dynamic = "force-dynamic";
 export async function getExercises(id: string) {
   if (!id) return null;
   try {
-    let {data: exercises} = await supabase.from("exercise_list").select("*").eq("user_id", id);
+    const {data: userExercises} = await supabase
+      .from("exercise_list")
+      .select("*")
+      .eq("user_id", id);
+    const {data: nullExercises} = await supabase
+      .from("exercise_list")
+      .select("*")
+      .is("user_id", null);
 
-    if (!exercises?.length) {
-      const {data: nullExercises} = await supabase
-        .from("exercise_list")
-        .select("*")
-        .is("user_id", null);
-
-      exercises = nullExercises;
-    }
+    const exercises = [...(userExercises || []), ...(nullExercises || [])];
 
     return exercises;
   } catch (error) {

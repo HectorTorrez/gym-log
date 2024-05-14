@@ -11,9 +11,10 @@ import {
 interface TypeSelectedProps {
   onTypeChange: (value: string) => void;
   options: Types[];
+  isCreate: boolean;
 }
 
-export function TypeSelected({onTypeChange, options}: TypeSelectedProps) {
+export function TypeSelected({onTypeChange, options, isCreate}: TypeSelectedProps) {
   const uniqueOptions = options.filter((v, i, a) => a.findIndex((t) => t.type === v.type) === i);
 
   return (
@@ -22,8 +23,7 @@ export function TypeSelected({onTypeChange, options}: TypeSelectedProps) {
         <SelectValue placeholder="Select a type" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="all">All</SelectItem>
-
+        {isCreate ? null : <SelectItem value="all">All</SelectItem>}
         {uniqueOptions.map((option) => {
           return (
             <SelectItem key={crypto.randomUUID()} value={option.type}>
