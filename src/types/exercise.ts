@@ -8,11 +8,11 @@ export interface FechExercise {
 }
 
 export interface ExerciseList {
-  created_at: string;
+  created_at?: string;
   id: string;
   name: string;
   template_id?: string;
-  sets: Set[];
+  sets?: Set[];
 }
 
 export type FieldsSet = {
@@ -29,7 +29,7 @@ export interface Exercise {
 }
 
 export interface Exercises {
-  id?: string;
+  dbId?: string;
   name: string;
   created_at?: string;
   template_id?: string;

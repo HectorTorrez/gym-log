@@ -46,10 +46,10 @@ export function Set({control, exercise, index, removeExercise, handleDeleteExerc
 
         <DeleteExerciseMenu
           onRemove={() => {
-            if (exercise.id) {
+            if (exercise.dbId) {
               removeExercise(index);
 
-              handleDeleteExercise(exercise.id);
+              handleDeleteExercise(exercise.dbId);
             }
           }}
         />

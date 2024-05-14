@@ -39,7 +39,7 @@ export default function CreateTemplates({
   };
 
   const handleDeleteExercise = (id: string) => {
-    const newExercisesList = exercisesList.filter((exercise) => exercise.id === id);
+    const newExercisesList = exercisesList.filter((exercise) => exercise.id !== id);
 
     setExercisesList(newExercisesList);
   };
@@ -87,7 +87,7 @@ export default function CreateTemplates({
             <AddExercise handleListExercises={handleListExercises} />
 
             <ExerciseForm
-              exercisesList={isEditing ? isEditingExercises ?? exercisesList : exercisesList}
+              exercisesList={exercisesList}
               handleClearTemplate={handleClearTemplate}
               handleDeleteExercise={handleDeleteExercise}
               isEditing={isEditing}

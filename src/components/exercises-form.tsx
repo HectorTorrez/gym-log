@@ -25,13 +25,13 @@ export const formSchema = z.object({
   exercises: z.array(
     z
       .object({
-        id: z.string().optional(),
+        dbId: z.string().optional(),
         name: z.string(),
         template_id: z.string().optional(),
         set: z.string().optional(),
         sets: z.array(
           z.object({
-            id: z.string().optional(),
+            dbId: z.string().optional(),
             weight: z.coerce.number().nonnegative(),
             reps: z.coerce.number().nonnegative(),
             set: z.coerce.number().optional(),
@@ -135,7 +135,7 @@ export function ExerciseForm({
     setOpen(true);
     setLoading(true);
     try {
-      const {data: templateData, error: templateError} = await supabase
+      const {data: templateId, error: templateError} = await supabase
         .from("template")
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-expect-error
@@ -150,48 +150,55 @@ export function ExerciseForm({
           {
             unique: "id",
           },
-        );
+        )
+        .select("id");
 
       if (!templateError) {
         values.exercises.forEach(async (exercise) => {
-          exercise?.sets.forEach(async (set) => {
+          if (!exercise) return setError(true);
+          const {data: exerciseData, error: exerciseError} = await supabase
+            .from("exercise")
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
             //@ts-ignore
-            const {data, error} = await supabase.from("sets").upsert(
+            .upsert(
               [
                 {
-                  id: set.id,
-                  weight: set.weight,
-                  reps: set.reps,
-                  set: set.set || 0,
-                  exercise_id: exercise.id,
+                  id: exercise.dbId,
+                  name: exercise.name,
+                  template_id: exercise.template_id ?? templateId[0].id,
                 },
               ],
               {
                 unique: "id",
               },
-            );
+            )
+            .select("id");
 
-            if (!error) {
+          exercise?.sets.forEach(async (set) => {
+            const {data, error} = await supabase
+              .from("sets")
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
               //@ts-ignore
-              const {error: exerciseError} = await supabase.from("exercise").upsert(
+              .upsert(
                 [
                   {
-                    id: exercise.id,
-                    name: exercise.name,
-                    template_id: exercise.template_id || "",
+                    id: set.dbId,
+                    weight: set.weight,
+                    reps: set.reps,
+                    set: set.set || 0,
+                    exercise_id: exerciseData?.[0]?.id ?? "",
                   },
                 ],
                 {
                   unique: "id",
                 },
-              );
-            }
+              )
+              .select("*");
+
+            router.refresh();
           });
         });
       }
-      router.refresh();
       setLoading(false);
       handleClearTemplate();
       setOpen(false);
@@ -209,16 +216,22 @@ export function ExerciseForm({
         exercisesList.map((exercise) => {
           return {
             name: exercise.name,
-            sets: exercise.sets.map((set) => {
+            sets: exercise.sets?.map((set) => {
               return {
-                id: set.id,
+                dbId: set.id,
                 weight: set.weight,
                 reps: set.reps,
                 exercise_id: set.exercise_id,
                 ...(isEditing ? {set: set.set} : {}),
               };
-            }),
-            id: exercise.id,
+            }) ?? [
+              {
+                dbId: crypto.randomUUID(),
+                weight: 0,
+                reps: 0,
+              },
+            ],
+            dbId: exercise.id,
             template_id: exercise.template_id,
           };
         }),
@@ -229,11 +242,10 @@ export function ExerciseForm({
         exercisesList.map((exercise) => {
           return {
             id: exercise.id,
-            template_id: exercise.template_id,
             name: exercise.name,
-
             sets: [
               {
+                dbId: crypto.randomUUID(),
                 weight: 0,
                 reps: 0,
               },
@@ -255,6 +267,8 @@ export function ExerciseForm({
 
   const values = form.getValues();
 
+  console.log({values});
+
   return (
     <Form {...form}>
       {error ? (
@@ -273,7 +287,7 @@ export function ExerciseForm({
           {fields.map((exercise, index) => {
             return (
               <Set
-                key={exercise.id}
+                key={exercise.dbId}
                 control={form.control as unknown as Control}
                 exercise={exercise}
                 handleDeleteExercise={handleDeleteExercise}
