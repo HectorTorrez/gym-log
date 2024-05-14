@@ -51,3 +51,11 @@ export interface Set {
   // set: number;
   // weight: number;
 }
+
+export interface Types {
+  type: string;
+}
+
+export interface Category {
+  category: string;
+}
