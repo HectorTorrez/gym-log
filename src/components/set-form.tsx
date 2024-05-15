@@ -125,6 +125,7 @@ export function Set({control, exercise, index, removeExercise, handleDeleteExerc
               {fields.length > 1 && (
                 <DeleteSet
                   onRemove={() => {
+
                     removeSet(setField.dbId, setIndex);
                     // remove(setField.dbId);
                   }}
