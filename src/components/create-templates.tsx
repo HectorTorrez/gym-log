@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 "use client";
 import type {ExerciseList} from "@/types/exercise";
 
@@ -12,6 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import supabase from "@/db/api/client";
 
 import {Input} from "./ui/input";
 import AddExercise from "./add-exercise";
@@ -38,7 +40,9 @@ export default function CreateTemplates({
     setExercisesList([...exercisesList, ...exercises]);
   };
 
-  const handleDeleteExercise = (id: string) => {
+  const handleDeleteExercise = async (id: string) => {
+    await supabase.from("exercise").delete().eq("id", id);
+
     const newExercisesList = exercisesList.filter((exercise) => exercise.id !== id);
 
     setExercisesList(newExercisesList);

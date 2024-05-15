@@ -53,7 +53,7 @@ export default function ExerciseListClient({exercises}: ExerciseListClientProps)
         onInputChange={onInputChange}
         onTypeChange={onTypeChange}
       />
-      <section className="flex max-h-[calc(100vh-400px)] flex-col gap-5 overflow-y-auto">
+      <section className="scrollbar flex max-h-[calc(100vh-400px)] flex-col gap-5 overflow-y-scroll ">
         {!filteredExercises?.length && <div>No exercises found</div>}
         {filteredExercises?.map((exercise) => {
           return (

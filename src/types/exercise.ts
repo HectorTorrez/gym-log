@@ -16,6 +16,7 @@ export interface ExerciseList {
 }
 
 export type FieldsSet = {
+  dbId: string;
   name: string;
   sets: {
     weight: number;

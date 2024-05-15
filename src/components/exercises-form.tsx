@@ -153,6 +153,8 @@ export function ExerciseForm({
         )
         .select("id");
 
+      console.log({templateError});
+
       if (!templateError) {
         values.exercises.forEach(async (exercise) => {
           if (!exercise) return setError(true);
@@ -173,6 +175,8 @@ export function ExerciseForm({
               },
             )
             .select("id");
+
+          console.log({exerciseError});
 
           exercise?.sets.forEach(async (set) => {
             const {data, error} = await supabase
@@ -266,8 +270,6 @@ export function ExerciseForm({
   }, [error]);
 
   const values = form.getValues();
-
-  console.log({values});
 
   return (
     <Form {...form}>

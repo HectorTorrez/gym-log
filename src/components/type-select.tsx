@@ -19,7 +19,7 @@ export function TypeSelected({onTypeChange, options, isCreate}: TypeSelectedProp
 
   return (
     <Select onValueChange={onTypeChange}>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger>
         <SelectValue placeholder="Select a type" />
       </SelectTrigger>
       <SelectContent>

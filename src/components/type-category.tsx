@@ -21,7 +21,7 @@ export function CategorySelected({onCategoryChange, options, isCreate}: TypeCate
 
   return (
     <Select onValueChange={onCategoryChange}>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger>
         <SelectValue placeholder="Select a category" />
       </SelectTrigger>
       <SelectContent>
