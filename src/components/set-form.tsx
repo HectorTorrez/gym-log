@@ -18,9 +18,17 @@ interface SetProps {
   index: number;
   removeExercise: (index: number) => void;
   handleDeleteExercise: (id: string) => void;
+  onDeleteReusableExercise?: (id: string) => void;
 }
 
-export function Set({control, exercise, index, removeExercise, handleDeleteExercise}: SetProps) {
+export function Set({
+  control,
+  exercise,
+  index,
+  removeExercise,
+  handleDeleteExercise,
+  onDeleteReusableExercise,
+}: SetProps) {
   const {
     fields: untypedFields,
     append,
@@ -58,7 +66,7 @@ export function Set({control, exercise, index, removeExercise, handleDeleteExerc
           onRemove={() => {
             if (exercise.dbId) {
               removeExercise(index);
-
+              onDeleteReusableExercise && onDeleteReusableExercise(exercise.dbId);
               handleDeleteExercise(exercise.dbId);
             }
           }}

@@ -21,7 +21,7 @@ export default async function Workoutpage() {
     <section className="mt-10 flex flex-col gap-10">
       <h2 className=" text-xl font-bold">Templates</h2>
       <section>
-        <CreateTemplates isEditing={false} />
+        <CreateTemplates isEditing={false} isEditingTemplate={false} />
       </section>
       <section className="flex flex-col gap-5 sm:grid sm:grid-cols-2 md:grid-cols-3">
         {data?.map((template: TypeReusableTemplate) => {

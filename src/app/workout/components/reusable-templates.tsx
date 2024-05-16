@@ -37,6 +37,11 @@ export function ReusableTemplates(props: ReusableTemplatesProps) {
     router.refresh();
   };
 
+  const handleDeleteExercise = async (id: string) => {
+    await supabase.from("reusable_exercise").delete().eq("id", id);
+    router.refresh();
+  };
+
   return (
     <Dialog>
       <DialogTrigger className="max-h-[200px] w-full max-w-[375px]  overflow-hidden rounded-lg  border p-6 text-start">
@@ -49,10 +54,18 @@ export function ReusableTemplates(props: ReusableTemplatesProps) {
               isEditing
               editButton="Use this template"
               isEditingExercises={reusable_exercise}
-              isEditingTemplateName={props.name}
-              templateId={props.id}
+              isEditingTemplate={false}
+              isEditingTemplateName={name}
+              templateId={id}
             />
-            <DeleteExerciseMenu onRemove={handleDelete} />
+            <DeleteExerciseMenu
+              isReusableTemplate
+              handleDeleteExercise={handleDeleteExercise}
+              isEditingExercises={reusable_exercise}
+              isEditingTemplateName={name}
+              templateId={id}
+              onRemove={handleDelete}
+            />
           </DialogTitle>
           <DialogDescription className="flex flex-col gap-3">
             {reusable_exercise.map((exercise) => {

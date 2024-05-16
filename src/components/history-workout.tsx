@@ -28,6 +28,7 @@ export function HistoryWorkout(props: HistoryWorkoutsCardProps) {
           <CreateTemplates
             isEditing
             isEditingExercises={props.exercise}
+            isEditingTemplate={false}
             isEditingTemplateName={props.name}
             templateId={props.id}
           />

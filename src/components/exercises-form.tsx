@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/non-nullable-type-assertion-style */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 "use client";
@@ -52,6 +53,8 @@ interface ExerciseFormProps {
   isEditing?: boolean;
   open: boolean;
   editButton?: string;
+  isEditingTemplate: boolean;
+  onDeleteReusableExercise?: (id: string) => void;
 }
 
 export function ExerciseForm({
@@ -63,6 +66,8 @@ export function ExerciseForm({
   isEditing,
   open,
   editButton,
+  isEditingTemplate,
+  onDeleteReusableExercise,
 }: ExerciseFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -78,7 +83,7 @@ export function ExerciseForm({
   const {user} = useUser();
   const router = useRouter();
 
-  // const onInvalid = (errors) => console.log(errors);
+  // const onInvalid = (errors) => console.log({errors});
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setOpen(true);
@@ -158,7 +163,7 @@ export function ExerciseForm({
   const onEdit = async (values: z.infer<typeof formSchema>) => {
     setOpen(true);
     setLoading(true);
-    console.log({values});
+
     try {
       const {data: templateId, error: templateError} = await supabase
         .from("template")
@@ -207,7 +212,6 @@ export function ExerciseForm({
             .select("id");
 
           console.log({exerciseError});
-          console.log({exerciseData});
 
           exercise?.sets.forEach(async (set) => {
             const {data, error} = await supabase
@@ -231,7 +235,7 @@ export function ExerciseForm({
               .select("*");
 
             console.log({error});
-            console.log({data});
+
             router.refresh();
           });
         });
@@ -239,6 +243,60 @@ export function ExerciseForm({
       setLoading(false);
       handleClearTemplate();
       setOpen(false);
+    } catch (error) {
+      setError(true);
+      setOpen(true);
+      setLoading(false);
+    }
+  };
+
+  const handleEditReusableTemplate = async (values: z.infer<typeof formSchema>) => {
+    setOpen(true);
+    setLoading(true);
+    try {
+      console.log({values});
+      if (isEditingTemplate) {
+        const {data: reusableTemplate, error: reusableTemplateError} = await supabase
+          .from("reusables_templates")
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
+          //@ts-ignore
+          .upsert(
+            [
+              {
+                name: templateName.length === 0 ? "Template name" : templateName,
+                user_id: user?.id,
+                id: values.exercises[0]?.template_id ?? "",
+              },
+            ],
+            {unique: "id"},
+          )
+          .select("id");
+
+        console.log({reusableTemplateError});
+        for (const exercise of values.exercises) {
+          const {data: reusableExercise, error: errorReusable} = await supabase
+            .from("reusable_exercise")
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
+            //@ts-ignore
+            .upsert(
+              {
+                name: exercise?.name as string,
+                template_id: (reusableTemplate?.[0]?.id as string) || "", // Add type assertion here
+                id: exercise?.dbId,
+              },
+              {
+                unique: "id",
+              },
+            )
+            .select("id");
+
+          console.log({errorReusable});
+        }
+        router.refresh();
+        setLoading(false);
+        handleClearTemplate();
+        setOpen(false);
+      }
     } catch (error) {
       setError(true);
       setOpen(true);
@@ -306,8 +364,6 @@ export function ExerciseForm({
 
   const values = form.getValues();
 
-  console.log({fields});
-
   return (
     <Form {...form}>
       {error ? (
@@ -320,7 +376,14 @@ export function ExerciseForm({
       ) : null}
       <form
         className="mb-10 mt-10 flex flex-col gap-5"
-        onSubmit={isEditing ? form.handleSubmit(onEdit) : form.handleSubmit(onSubmit)}
+        onSubmit={
+          isEditingTemplate
+            ? form.handleSubmit(handleEditReusableTemplate)
+            : isEditing
+              ? form.handleSubmit(onEdit)
+              : form.handleSubmit(onSubmit)
+        }
+        // onSubmit={}
       >
         <section className="flex max-h-[340px] flex-col gap-5 overflow-y-auto">
           {fields.map((exercise, index) => {
@@ -332,6 +395,7 @@ export function ExerciseForm({
                 handleDeleteExercise={handleDeleteExercise}
                 index={index}
                 removeExercise={remove}
+                onDeleteReusableExercise={onDeleteReusableExercise}
               />
             );
           })}

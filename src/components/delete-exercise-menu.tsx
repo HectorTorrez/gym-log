@@ -1,3 +1,5 @@
+import type {ExerciseList} from "@/types/exercise";
+
 import {CircleEllipsis} from "lucide-react";
 
 import {
@@ -10,12 +12,25 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import {DeleteSet} from "./delete-set";
+import CreateTemplates from "./create-templates";
 
 interface DeleteExerciseMenuProps {
   onRemove: () => void;
+  isEditingExercises?: ExerciseList[];
+  isEditingTemplateName?: string;
+  templateId?: string;
+  handleDeleteExercise?: (id: string) => void;
+  isReusableTemplate?: boolean;
 }
 
-export function DeleteExerciseMenu({onRemove}: DeleteExerciseMenuProps) {
+export function DeleteExerciseMenu({
+  onRemove,
+  isEditingExercises,
+  isEditingTemplateName,
+  templateId,
+  handleDeleteExercise,
+  isReusableTemplate,
+}: DeleteExerciseMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -24,6 +39,19 @@ export function DeleteExerciseMenu({onRemove}: DeleteExerciseMenuProps) {
       <DropdownMenuContent>
         <DropdownMenuLabel>Options</DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {isReusableTemplate ? (
+          <CreateTemplates
+            isEditing
+            isEditingTemplate
+            editButton="Edit template"
+            isEditingClassName="p-2 text-[14px] text-white"
+            isEditingExercises={isEditingExercises}
+            isEditingTemplateName={isEditingTemplateName}
+            templateId={templateId}
+            onDeleteReusableExercise={handleDeleteExercise}
+          />
+        ) : null}
+
         <DropdownMenuItem onClick={(e) => e.preventDefault()}>
           {/* Delete */}
           <DeleteSet title="Delete" onRemove={onRemove} />

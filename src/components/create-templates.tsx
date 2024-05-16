@@ -14,6 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import supabase from "@/db/api/client";
+import {cn} from "@/lib/utils";
 
 import {Input} from "./ui/input";
 import AddExercise from "./add-exercise";
@@ -25,6 +26,9 @@ interface CreateTemplatesProps {
   isEditingTemplateName?: string;
   isEditingExercises?: ExerciseList[];
   editButton?: string;
+  isEditingTemplate: boolean;
+  onDeleteReusableExercise?: (id: string) => void;
+  isEditingClassName?: string;
 }
 
 export default function CreateTemplates({
@@ -32,6 +36,9 @@ export default function CreateTemplates({
   isEditingExercises,
   isEditingTemplateName,
   editButton,
+  isEditingTemplate,
+  onDeleteReusableExercise,
+  isEditingClassName,
 }: CreateTemplatesProps) {
   const [templateName, setTemplateName] = useState("Template name");
   const [exercisesList, setExercisesList] = useState<ExerciseList[]>([]);
@@ -71,7 +78,9 @@ export default function CreateTemplates({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       {isEditing ? (
-        <DialogTrigger className=" flex items-center justify-start text-blue-400">
+        <DialogTrigger
+          className={cn("flex items-center justify-start text-blue-400", isEditingClassName)}
+        >
           {editButton ? editButton : "Edit template"}
         </DialogTrigger>
       ) : (
@@ -100,9 +109,11 @@ export default function CreateTemplates({
               handleClearTemplate={handleClearTemplate}
               handleDeleteExercise={handleDeleteExercise}
               isEditing={isEditing}
+              isEditingTemplate={isEditingTemplate}
               open={open}
               setOpen={setOpen}
               templateName={templateName}
+              onDeleteReusableExercise={onDeleteReusableExercise}
             />
           </DialogDescription>
         </DialogHeader>
