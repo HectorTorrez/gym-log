@@ -20,7 +20,7 @@ export default function CreateExercise() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="border border-blue-400 text-blue-400" variant="ghost">
+        <Button className="flex justify-start px-0 text-start text-blue-400" variant="link">
           Create new exercise
         </Button>
       </DialogTrigger>

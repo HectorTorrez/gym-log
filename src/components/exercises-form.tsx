@@ -104,6 +104,7 @@ export function ExerciseForm({
         .insert({
           name: templateName.length === 0 ? "Template name" : templateName,
           user_id: user?.id,
+          id: crypto.randomUUID(),
         })
         .select("id");
 
@@ -123,7 +124,7 @@ export function ExerciseForm({
             .from("reusable_exercise")
             .insert({
               name: exercise?.name || "",
-              reusable_template_id: (reusableTemplate?.[0]?.id as string) || "", // Add type assertion here
+              template_id: (reusableTemplate?.[0]?.id as string) || "", // Add type assertion here
             });
 
           console.log({errorReusable});
@@ -143,6 +144,7 @@ export function ExerciseForm({
           });
         });
       }
+      router.refresh();
       setLoading(false);
       handleClearTemplate();
       setOpen(false);
@@ -165,7 +167,9 @@ export function ExerciseForm({
         .upsert(
           [
             {
-              id: values.exercises[0] ? values.exercises[0].template_id ?? "" : "",
+              //HERE THE PROBLEM IS THAT THE TEMPLATE ID IS NOT BEING PASSED
+              // id: values.exercises[0] ? values.exercises[0].template_id ?? "" : "",
+              // id: crypto.randomUUID(),
               name: templateName.length === 0 ? "Template name" : templateName,
               user_id: user?.id,
             },
@@ -180,6 +184,7 @@ export function ExerciseForm({
 
       if (!templateError) {
         values.exercises.forEach(async (exercise) => {
+          console.log(templateId[0].id);
           if (!exercise) return setError(true);
           const {data: exerciseData, error: exerciseError} = await supabase
             .from("exercise")
@@ -190,17 +195,19 @@ export function ExerciseForm({
                 {
                   id: exercise.dbId,
                   name: exercise.name,
-                  template_id: exercise.template_id ?? templateId[0].id,
+                  template_id: templateId[0].id,
                   created_at: exercise.created_at,
                 },
               ],
               {
                 unique: "id",
               },
+              // exercise.template_id ??
             )
             .select("id");
 
           console.log({exerciseError});
+          console.log({exerciseData});
 
           exercise?.sets.forEach(async (set) => {
             const {data, error} = await supabase
@@ -223,6 +230,8 @@ export function ExerciseForm({
               )
               .select("*");
 
+            console.log({error});
+            console.log({data});
             router.refresh();
           });
         });
@@ -242,8 +251,6 @@ export function ExerciseForm({
       form.setValue(
         "exercises",
         exercisesList.map((exercise) => {
-          console.log({exercise});
-
           return {
             name: exercise.name,
             created_at: exercise.created_at,

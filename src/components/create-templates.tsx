@@ -71,7 +71,7 @@ export default function CreateTemplates({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       {isEditing ? (
-        <DialogTrigger className="  text-blue-400">
+        <DialogTrigger className=" flex items-center justify-start text-blue-400">
           {editButton ? editButton : "Edit template"}
         </DialogTrigger>
       ) : (
