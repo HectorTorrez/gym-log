@@ -2,7 +2,7 @@
 
 import type {ExerciseList, FechExercise} from "@/types/exercise";
 
-import {Suspense, use, useState} from "react";
+import {Suspense, use, useEffect, useState} from "react";
 import {useQuery} from "@tanstack/react-query";
 import {useUser} from "@clerk/nextjs";
 
@@ -41,6 +41,7 @@ export default function ChooseExercise({handleListExercises}: ChooseExercisesPro
   const [type, setType] = useState("");
   const [category, setCategory] = useState("");
   const [selectedExercises, setSelectedExercises] = useState<ExerciseList[]>([]);
+  const [toggleSelected, setToggleSelected] = useState<string[]>([]);
 
   // const {data} = useGetExercises();
   const {user} = useUser();
@@ -81,6 +82,15 @@ export default function ChooseExercise({handleListExercises}: ChooseExercisesPro
     setCategory(value);
   };
 
+  useEffect(() => {
+    const flattenedToggleSelected = toggleSelected.flat();
+    const newExercises = flattenedToggleSelected.map((exercise) => {
+      return {id: crypto.randomUUID(), name: exercise};
+    });
+
+    setSelectedExercises(newExercises);
+  }, [toggleSelected]);
+
   return (
     <section>
       <section className="mb-3 mt-3 ">
@@ -115,7 +125,8 @@ export default function ChooseExercise({handleListExercises}: ChooseExercisesPro
           className="flex flex-col"
           type="multiple"
           variant="outline"
-          onValueChange={(value) => handleSelect(value)}
+          // onValueChange={(value) => handleSelect(value)}
+          onValueChange={(value) => setToggleSelected(value)}
         >
           {filteredData?.length === 0 && (
             <p className="text-center text-white">No exercises found</p>
