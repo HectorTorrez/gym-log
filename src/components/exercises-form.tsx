@@ -29,6 +29,7 @@ export const formSchema = z.object({
         name: z.string(),
         template_id: z.string().optional(),
         set: z.string().optional(),
+        created_at: z.string().optional(),
         sets: z.array(
           z.object({
             dbId: z.string().optional(),
@@ -50,6 +51,7 @@ interface ExerciseFormProps {
   handleClearTemplate: () => void;
   isEditing?: boolean;
   open: boolean;
+  editButton?: string;
 }
 
 export function ExerciseForm({
@@ -60,6 +62,7 @@ export function ExerciseForm({
   handleClearTemplate,
   isEditing,
   open,
+  editButton,
 }: ExerciseFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -94,6 +97,16 @@ export function ExerciseForm({
         ])
         .select("id");
 
+      const {data: reusableTemplate, error: reusableTemplateError} = await supabase
+        .from("reusables_templates")
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-expect-error
+        .insert({
+          name: templateName.length === 0 ? "Template name" : templateName,
+          user_id: user?.id,
+        })
+        .select("id");
+
       if (!templateError) {
         values.exercises.forEach(async (exercise) => {
           const {data: exerciseData} = await supabase
@@ -105,6 +118,15 @@ export function ExerciseForm({
               },
             ])
             .select("id");
+
+          const {data: reusableExercise, error: errorReusable} = await supabase
+            .from("reusable_exercise")
+            .insert({
+              name: exercise?.name || "",
+              reusable_template_id: (reusableTemplate?.[0]?.id as string) || "", // Add type assertion here
+            });
+
+          console.log({errorReusable});
 
           exercise?.sets.forEach(async (set, index) => {
             const {data, error} = await supabase
@@ -134,6 +156,7 @@ export function ExerciseForm({
   const onEdit = async (values: z.infer<typeof formSchema>) => {
     setOpen(true);
     setLoading(true);
+    console.log({values});
     try {
       const {data: templateId, error: templateError} = await supabase
         .from("template")
@@ -168,6 +191,7 @@ export function ExerciseForm({
                   id: exercise.dbId,
                   name: exercise.name,
                   template_id: exercise.template_id ?? templateId[0].id,
+                  created_at: exercise.created_at,
                 },
               ],
               {
@@ -218,8 +242,11 @@ export function ExerciseForm({
       form.setValue(
         "exercises",
         exercisesList.map((exercise) => {
+          console.log({exercise});
+
           return {
             name: exercise.name,
+            created_at: exercise.created_at,
             sets: exercise.sets?.map((set) => {
               return {
                 dbId: set.id,
@@ -247,6 +274,7 @@ export function ExerciseForm({
           return {
             id: exercise.id,
             name: exercise.name,
+            // created_at: exercise.created_at,
             sets: [
               {
                 dbId: crypto.randomUUID(),
@@ -309,7 +337,7 @@ export function ExerciseForm({
           }
           type="submit"
         >
-          {loading ? <Loader /> : isEditing ? "Edit" : "Create"}
+          {loading ? <Loader /> : isEditing ? editButton ? editButton : "edit" : "Create"}
         </Button>
       </form>
     </Form>

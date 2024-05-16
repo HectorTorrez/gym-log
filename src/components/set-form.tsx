@@ -37,6 +37,8 @@ export function Set({control, exercise, index, removeExercise, handleDeleteExerc
     await supabase.from("sets").delete().eq("id", id);
   };
 
+  const setCount = fields.length;
+
   return (
     <section className="flex flex-col justify-center gap-3">
       <section className=" flex w-full items-center justify-between">
@@ -68,14 +70,14 @@ export function Set({control, exercise, index, removeExercise, handleDeleteExerc
           <section key={setField.id} className="grid grid-cols-4 justify-center gap-5">
             <FormField
               control={control}
-              defaultValue={setIndex + 1}
+              defaultValue={setCount}
               name={`exercises.${index}.sets.${setIndex}.set`}
               render={({field}) => (
                 <FormItem>
                   <FormLabel>Set</FormLabel>
                   <FormControl>
                     <Input
-                      className="flex items-center justify-center text-center"
+                      className="flex h-[20px] items-center justify-center text-center"
                       type="number"
                       {...field}
                       // disabled
@@ -94,7 +96,7 @@ export function Set({control, exercise, index, removeExercise, handleDeleteExerc
                   <FormLabel>Weight</FormLabel>
                   <FormControl>
                     <Input
-                      className="flex items-center justify-center text-center"
+                      className="flex h-[20px] items-center justify-center text-center"
                       type="number"
                       {...field}
                     />
@@ -112,7 +114,7 @@ export function Set({control, exercise, index, removeExercise, handleDeleteExerc
                   <FormLabel>Reps</FormLabel>
                   <FormControl>
                     <Input
-                      className="flex items-center justify-center text-center"
+                      className="flex h-[20px] items-center justify-center text-center"
                       type="number"
                       {...field}
                     />
@@ -125,7 +127,6 @@ export function Set({control, exercise, index, removeExercise, handleDeleteExerc
               {fields.length > 1 && (
                 <DeleteSet
                   onRemove={() => {
-
                     removeSet(setField.dbId, setIndex);
                     // remove(setField.dbId);
                   }}

@@ -15,7 +15,7 @@ export async function getUsersHistoryWorkouts() {
       .from("template")
       .select("*, exercise(*, sets(*))")
       .eq("user_id", userId ? userId : "")
-      .order("created_at", {ascending: true});
+      .order("created_at", {ascending: false});
 
     if (template) {
       template.forEach((t) => {

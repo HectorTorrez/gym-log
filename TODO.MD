@@ -1,4 +1,5 @@
 ### TODO
 
-- [ ] Fix created_at when update a exercise
-- [ ] Create reusable templates
+- [ x ] Fix created_at when update a exercise
+- [ x ] Create reusable templates
+- [ ] Refactor interface

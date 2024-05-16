@@ -24,12 +24,14 @@ interface CreateTemplatesProps {
   templateId?: string;
   isEditingTemplateName?: string;
   isEditingExercises?: ExerciseList[];
+  editButton?: string;
 }
 
 export default function CreateTemplates({
   isEditing,
   isEditingExercises,
   isEditingTemplateName,
+  editButton,
 }: CreateTemplatesProps) {
   const [templateName, setTemplateName] = useState("Template name");
   const [exercisesList, setExercisesList] = useState<ExerciseList[]>([]);
@@ -69,7 +71,9 @@ export default function CreateTemplates({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       {isEditing ? (
-        <DialogTrigger className="w-[100px]   text-blue-400">Edit template</DialogTrigger>
+        <DialogTrigger className="  text-blue-400">
+          {editButton ? editButton : "Edit template"}
+        </DialogTrigger>
       ) : (
         <DialogTrigger className="mt-3 w-full max-w-lg rounded-lg border border-gray-50 p-3">
           Create template
@@ -91,6 +95,7 @@ export default function CreateTemplates({
             <AddExercise handleListExercises={handleListExercises} />
 
             <ExerciseForm
+              editButton={editButton}
               exercisesList={exercisesList}
               handleClearTemplate={handleClearTemplate}
               handleDeleteExercise={handleDeleteExercise}

@@ -13,7 +13,7 @@ export default async function WorkoutHistoryPage() {
       <section className="pb-5 pt-5">
         <h2>History Workouts</h2>
       </section>
-      <section className="flex flex-col gap-5">
+      <section className="flex flex-col gap-5 sm:grid sm:grid-cols-2 md:grid-cols-3">
         {template?.map((exercise) => {
           return <HistoryWorkout key={exercise.id} {...exercise} />;
         })}
