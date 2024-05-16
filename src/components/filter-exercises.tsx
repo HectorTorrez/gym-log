@@ -1,5 +1,7 @@
 "use client";
 
+import {Suspense} from "react";
+
 import {useGetTypes} from "@/hooks/useGetType";
 import {useGetCategories} from "@/hooks/useGetCategories";
 
@@ -26,7 +28,7 @@ export default function FilterExercises({
   if (!type || !category) return null;
 
   return (
-    <form className="mb-5 mt-5 flex flex-col gap-5">
+    <div className="mb-5 mt-5 flex flex-col gap-5">
       <Input
         placeholder="Search exercises"
         type="text"
@@ -45,6 +47,6 @@ export default function FilterExercises({
           <TypeSelected isCreate={false} options={type} onTypeChange={onTypeChange} />
         </section>
       </section>
-    </form>
+    </div>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Suspense} from "react";
 import {currentUser} from "@clerk/nextjs";
 
 import {getExercises} from "@/lib/getExercises";
@@ -21,7 +21,9 @@ export default async function ExerciseListPage() {
       <section className="mt-3">
         <CreateExercise />
       </section>
-      <ExerciseListClient exercises={exercises} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ExerciseListClient exercises={exercises} />
+      </Suspense>
     </section>
   );
 }

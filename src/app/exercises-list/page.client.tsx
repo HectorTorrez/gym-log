@@ -47,12 +47,14 @@ export default function ExerciseListClient({exercises}: ExerciseListClientProps)
 
   return (
     <section>
-      <FilterExercises
-        inputValue={inputValue}
-        onCategoryChange={onCategoryChange}
-        onInputChange={onInputChange}
-        onTypeChange={onTypeChange}
-      />
+      <Suspense fallback={<div className="text-7xl">Loading...</div>}>
+        <FilterExercises
+          inputValue={inputValue}
+          onCategoryChange={onCategoryChange}
+          onInputChange={onInputChange}
+          onTypeChange={onTypeChange}
+        />
+      </Suspense>
       <section className="scrollbar flex max-h-[calc(100vh-400px)] flex-col gap-5 overflow-y-scroll ">
         {!filteredExercises?.length && <div>No exercises found</div>}
         {filteredExercises?.map((exercise) => {

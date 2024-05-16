@@ -185,11 +185,8 @@ export function ExerciseForm({
         )
         .select("id");
 
-
-
       if (!templateError) {
         values.exercises.forEach(async (exercise) => {
-
           if (!exercise) return setError(true);
           const {data: exerciseData, error: exerciseError} = await supabase
             .from("exercise")
@@ -210,8 +207,6 @@ export function ExerciseForm({
               // exercise.template_id ??
             )
             .select("id");
-
-
 
           exercise?.sets.forEach(async (set) => {
             const {data, error} = await supabase
@@ -272,7 +267,6 @@ export function ExerciseForm({
           )
           .select("id");
 
-
         for (const exercise of values.exercises) {
           const {data: reusableExercise, error: errorReusable} = await supabase
             .from("reusable_exercise")
@@ -289,8 +283,6 @@ export function ExerciseForm({
               },
             )
             .select("id");
-
-     
         }
         router.refresh();
         setLoading(false);
