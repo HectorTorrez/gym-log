@@ -71,7 +71,7 @@ export default function CreateTemplates({
       {isEditing ? (
         <DialogTrigger className="w-[100px]   text-blue-400">Edit template</DialogTrigger>
       ) : (
-        <DialogTrigger className="mt-3 w-full rounded-lg border border-gray-50 p-3">
+        <DialogTrigger className="mt-3 w-full max-w-lg rounded-lg border border-gray-50 p-3">
           Create template
         </DialogTrigger>
       )}

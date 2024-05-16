@@ -14,13 +14,13 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en">
-      <body className="dark bg-background   font-sans antialiased">
+      <body className="dark    bg-background font-sans antialiased ">
         <AuthProvider>
           <ReactQueryProvider>
             <header>
               <Navbar />
             </header>
-            <main className="px-4">{children}</main>
+            <main className="mx-auto max-w-7xl px-4">{children}</main>
           </ReactQueryProvider>
         </AuthProvider>
       </body>
