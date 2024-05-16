@@ -279,7 +279,7 @@ export function ExerciseForm({
         "exercises",
         exercisesList.map((exercise) => {
           return {
-            id: exercise.id,
+            dbId: exercise.id,
             name: exercise.name,
             // created_at: exercise.created_at,
             sets: [
@@ -305,6 +305,8 @@ export function ExerciseForm({
   }, [error]);
 
   const values = form.getValues();
+
+  console.log({fields});
 
   return (
     <Form {...form}>

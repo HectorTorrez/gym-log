@@ -39,6 +39,8 @@ export function Set({control, exercise, index, removeExercise, handleDeleteExerc
 
   const setCount = fields.length;
 
+  console.log({exercise});
+
   return (
     <section className="flex flex-col justify-center gap-3">
       <section className=" flex w-full items-center justify-between">
@@ -58,7 +60,7 @@ export function Set({control, exercise, index, removeExercise, handleDeleteExerc
           onRemove={() => {
             if (exercise.dbId) {
               removeExercise(index);
-
+              console.log("jere");
               handleDeleteExercise(exercise.dbId);
             }
           }}
