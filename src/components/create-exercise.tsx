@@ -1,3 +1,4 @@
+"use client";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +11,11 @@ import {
 import {Button} from "./ui/button";
 import CreateExerciseForm from "./create-exercise-form";
 
+// interface CreateExerciseProps {
+//   handleChange: (value: boolean) => void;
+//   isChanged: boolean;
+// }
+
 export default function CreateExercise() {
   return (
     <Dialog>
@@ -20,7 +26,7 @@ export default function CreateExercise() {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogTitle>Create new exercise</DialogTitle>
           <DialogDescription>
             <CreateExerciseForm />
           </DialogDescription>

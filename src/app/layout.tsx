@@ -4,6 +4,7 @@ import "./globals.css";
 
 import AuthProvider from "@/auth/provider";
 import {Navbar} from "@/components/navbar";
+import ReactQueryProvider from "@/components/ReactQueryClientProvider";
 
 export const metadata: Metadata = {
   title: "gym-log",
@@ -15,10 +16,12 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     <html lang="en">
       <body className="dark bg-background   font-sans antialiased">
         <AuthProvider>
-          <header>
-            <Navbar />
-          </header>
-          <main className="px-4">{children}</main>
+          <ReactQueryProvider>
+            <header>
+              <Navbar />
+            </header>
+            <main className="px-4">{children}</main>
+          </ReactQueryProvider>
         </AuthProvider>
       </body>
     </html>

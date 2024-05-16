@@ -6,6 +6,7 @@ import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {useUser} from "@clerk/nextjs";
 import {useRouter} from "next/navigation";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 
 import {Button} from "@/components/ui/button";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
@@ -13,9 +14,11 @@ import {Input} from "@/components/ui/input";
 import {useGetCategories} from "@/hooks/useGetCategories";
 import {useGetTypes} from "@/hooks/useGetType";
 import supabase from "@/db/api/client";
+import {getExercise} from "@/queries/get-exercises";
 
 import {CategorySelected} from "./type-category";
 import {TypeSelected} from "./type-select";
+import {DialogClose} from "./ui/dialog";
 
 const formSchema = z.object({
   exercise: z.string().min(2, {
@@ -37,6 +40,11 @@ const formSchema = z.object({
     }),
 });
 
+// interface CreateExerciseFormProps {
+//   handleChange: (value: boolean) => void;
+//   isChanged: boolean;
+// }
+
 export default function CreateExerciseForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,7 +60,14 @@ export default function CreateExerciseForm() {
 
   const {user} = useUser();
   const router = useRouter();
-
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: async () => await getExercise(user?.id || ""),
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({queryKey: ["exercise_list"]});
+    },
+  });
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const {error} = await supabase.from("exercise_list").insert({
@@ -63,6 +78,7 @@ export default function CreateExerciseForm() {
         user_id: user?.id,
       });
 
+      mutation.mutate();
       console.log({error});
       router.refresh();
     } catch (error) {
@@ -117,7 +133,9 @@ export default function CreateExerciseForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <DialogClose asChild>
+          <Button type="submit">Submit</Button>
+        </DialogClose>
       </form>
     </Form>
   );
