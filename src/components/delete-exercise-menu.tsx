@@ -47,6 +47,7 @@ export function DeleteExerciseMenu({
             isEditingClassName="p-2 text-[14px] text-white"
             isEditingExercises={isEditingExercises}
             isEditingTemplateName={isEditingTemplateName}
+            isReusable={false}
             templateId={templateId}
             onDeleteReusableExercise={handleDeleteExercise}
           />

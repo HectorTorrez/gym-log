@@ -54,6 +54,7 @@ interface ExerciseFormProps {
   editButton?: string;
   isEditingTemplate: boolean;
   onDeleteReusableExercise?: (id: string) => void;
+  isReusable: boolean;
 }
 
 export function ExerciseForm({
@@ -67,6 +68,7 @@ export function ExerciseForm({
   editButton,
   isEditingTemplate,
   onDeleteReusableExercise,
+  isReusable,
 }: ExerciseFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -171,9 +173,8 @@ export function ExerciseForm({
         .upsert(
           [
             {
-              //HERE THE PROBLEM IS THAT THE TEMPLATE ID IS NOT BEING PASSED
-              // id: values.exercises[0] ? values.exercises[0].template_id ?? "" : "",
-              // id: crypto.randomUUID(),
+              id: values.exercises[0] ? values.exercises[0].template_id ?? "" : "",
+
               name: templateName.length === 0 ? "Template name" : templateName,
               user_id: user?.id,
             },
@@ -228,8 +229,6 @@ export function ExerciseForm({
               )
               .select("*");
 
-            console.log({error});
-
             router.refresh();
           });
         });
@@ -244,13 +243,56 @@ export function ExerciseForm({
     }
   };
 
+  const handleAddWithReusableTemplate = async (values: z.infer<typeof formSchema>) => {
+    setOpen(true);
+    setLoading(true);
+    try {
+      const {data, error} = await supabase
+        .from("template")
+        .insert([
+          {
+            id: crypto.randomUUID(),
+            name: templateName.length === 0 ? "Template name" : templateName,
+            user_id: user?.id || "", // Ensure user_id is always a string
+          },
+        ])
+        .select("id");
+
+      values.exercises.forEach(async (exercise) => {
+        const {data: dataExercise, error: exerciseError} = await supabase
+          .from("exercise")
+          .insert({
+            name: exercise?.name ?? "",
+            template_id: data?.[0]?.id ?? "",
+          })
+          .select("id");
+
+        exercise?.sets.forEach(async (set, index) => {
+          const {data, error} = await supabase.from("sets").insert({
+            weight: set.weight || 0,
+            reps: set.reps,
+            set: index + 1,
+            exercise_id: dataExercise?.[0]?.id || "",
+          });
+        });
+      });
+      router.refresh();
+      setLoading(false);
+      handleClearTemplate();
+      setOpen(false);
+    } catch (error) {
+      setError(true);
+      setOpen(true);
+      setLoading(false);
+    }
+  };
+
   const handleEditReusableTemplate = async (values: z.infer<typeof formSchema>) => {
     setOpen(true);
     setLoading(true);
     try {
-      console.log({values});
       if (isEditingTemplate) {
-        const {data: reusableTemplate, error: reusableTemplateError} = await supabase
+        const {data: reusableTemplate} = await supabase
           .from("reusables_templates")
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
           //@ts-ignore
@@ -267,7 +309,7 @@ export function ExerciseForm({
           .select("id");
 
         for (const exercise of values.exercises) {
-          const {data: reusableExercise, error: errorReusable} = await supabase
+          await supabase
             .from("reusable_exercise")
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
             //@ts-ignore
@@ -370,9 +412,11 @@ export function ExerciseForm({
         onSubmit={
           isEditingTemplate
             ? form.handleSubmit(handleEditReusableTemplate)
-            : isEditing
-              ? form.handleSubmit(onEdit)
-              : form.handleSubmit(onSubmit)
+            : isReusable
+              ? form.handleSubmit(handleAddWithReusableTemplate)
+              : isEditing
+                ? form.handleSubmit(onEdit)
+                : form.handleSubmit(onSubmit)
         }
         // onSubmit={}
       >

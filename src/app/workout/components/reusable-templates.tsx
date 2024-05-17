@@ -52,6 +52,7 @@ export function ReusableTemplates(props: ReusableTemplatesProps) {
           <DialogTitle className="mb-5 mt-5 flex items-center justify-between">
             <CreateTemplates
               isEditing
+              isReusable
               editButton="Use this template"
               isEditingExercises={reusable_exercise}
               isEditingTemplate={false}

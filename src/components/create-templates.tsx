@@ -28,6 +28,7 @@ interface CreateTemplatesProps {
   isEditingTemplate: boolean;
   onDeleteReusableExercise?: (id: string) => void;
   isEditingClassName?: string;
+  isReusable: boolean;
 }
 
 export default function CreateTemplates({
@@ -38,6 +39,7 @@ export default function CreateTemplates({
   isEditingTemplate,
   onDeleteReusableExercise,
   isEditingClassName,
+  isReusable,
 }: CreateTemplatesProps) {
   const [templateName, setTemplateName] = useState("Template name");
   const [exercisesList, setExercisesList] = useState<ExerciseList[]>([]);
@@ -109,6 +111,7 @@ export default function CreateTemplates({
               handleDeleteExercise={handleDeleteExercise}
               isEditing={isEditing}
               isEditingTemplate={isEditingTemplate}
+              isReusable={isReusable}
               open={open}
               setOpen={setOpen}
               templateName={templateName}
