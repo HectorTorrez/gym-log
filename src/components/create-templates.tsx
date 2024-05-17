@@ -3,7 +3,6 @@
 import type {ExerciseList} from "@/types/exercise";
 
 import {useEffect, useState} from "react";
-import {DialogClose} from "@radix-ui/react-dialog";
 
 import {
   Dialog,

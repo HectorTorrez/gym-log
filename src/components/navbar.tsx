@@ -1,6 +1,6 @@
 "use client";
-import {SignInButton, SignedIn, SignedOut, UserButton, useUser} from "@clerk/nextjs";
-import {BookDashed, Dumbbell, History, Rows4} from "lucide-react";
+import {SignInButton, SignedIn, UserButton, useUser} from "@clerk/nextjs";
+import {Dumbbell, History, Rows4} from "lucide-react";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 
@@ -16,6 +16,19 @@ export function Navbar() {
     <nav className="z-50  bg-gray-800 px-4 py-2">
       <section className="mx-auto flex w-full max-w-7xl items-center justify-between">
         <section>
+          {/* <Link
+            className={cn("flex items-center gap-1", {
+              "text-blue-400": isActive("/"),
+              "text-white": !isActive("/"),
+            })}
+            href="/"
+          >
+            <History className="h-5 w-5" />
+            <span className="hidden md:block">History</span>
+          </Link> */}
+        </section>
+
+        <section className="flex items-center gap-5">
           <Link
             className={cn("flex items-center gap-1", {
               "text-blue-400": isActive("/"),
@@ -26,9 +39,7 @@ export function Navbar() {
             <History className="h-5 w-5" />
             <span className="hidden md:block">History</span>
           </Link>
-        </section>
 
-        <section className="flex items-center gap-5">
           <Link
             className={cn("flex items-center gap-1", {
               "text-blue-400": isActive("/workout"),
@@ -50,7 +61,7 @@ export function Navbar() {
             <span className="hidden md:block">Templates</span>
           </Link> */}
           <Link
-            className={cn("flex items-center gap-1", {
+            className={cn("flex items-center gap-5", {
               "text-blue-400": isActive("/exercises-list"),
               "text-white": !isActive("/exercises-list"),
             })}

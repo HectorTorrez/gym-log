@@ -8,7 +8,7 @@ import type {Control} from "react-hook-form";
 
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useFieldArray, useForm} from "react-hook-form";
-import {set, z} from "zod";
+import {z} from "zod";
 import {useEffect, useState} from "react";
 import {useUser} from "@clerk/nextjs";
 import {Loader} from "lucide-react";
@@ -19,7 +19,6 @@ import {Form} from "@/components/ui/form";
 import supabase from "@/db/api/client";
 
 import {Set} from "./set-form";
-import {DialogClose} from "./ui/dialog";
 import {AlertError} from "./alert-error";
 
 export const formSchema = z.object({

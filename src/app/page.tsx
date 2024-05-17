@@ -14,6 +14,9 @@ export default async function WorkoutHistoryPage() {
         <h2>History Workouts</h2>
       </section>
       <section className="flex flex-col gap-5 sm:grid sm:grid-cols-2 md:grid-cols-3">
+        {template?.length === 0 && (
+          <div className="text-center text-xl">No history workouts, create some</div>
+        )}
         {template?.map((exercise) => {
           return <HistoryWorkout key={exercise.id} {...exercise} />;
         })}

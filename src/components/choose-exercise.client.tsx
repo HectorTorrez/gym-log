@@ -1,39 +1,25 @@
 "use client";
 
-import type {ExerciseList, FechExercise} from "@/types/exercise";
+import type {ExerciseList} from "@/types/exercise";
 
-import {Suspense, use, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {useQuery} from "@tanstack/react-query";
 import {useUser} from "@clerk/nextjs";
 
 import {ToggleGroup, ToggleGroupItem} from "@/components/ui/toggle-group";
-import {useGetExercises} from "@/hooks/useGetExercises";
 import {useGetTypes} from "@/hooks/useGetType";
 import {useGetCategories} from "@/hooks/useGetCategories";
 import {getExercise} from "@/queries/get-exercises";
-import supabase from "@/db/api/client";
 
 import {Button} from "./ui/button";
 import {Input} from "./ui/input";
 import {DialogClose} from "./ui/dialog";
-import {Skeleton} from "./ui/skeleton";
 import {TypeSelected} from "./type-select";
 import {CategorySelected} from "./type-category";
-import FilterExercises from "./filter-exercises";
 
 interface ChooseExercisesProps {
   handleListExercises: (exercises: ExerciseList[]) => void;
   // data?: DataType[];
-}
-
-interface DataType {
-  category: string;
-  created_at: string;
-  id: string;
-  name: string;
-  role: string | null;
-  type: string;
-  user_id: string | null;
 }
 
 export default function ChooseExercise({handleListExercises}: ChooseExercisesProps) {

@@ -1,7 +1,5 @@
 "use client";
 
-import {Suspense} from "react";
-
 import {useGetTypes} from "@/hooks/useGetType";
 import {useGetCategories} from "@/hooks/useGetCategories";
 
