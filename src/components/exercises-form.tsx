@@ -17,6 +17,7 @@ import {useRouter} from "next/navigation";
 import {Button} from "@/components/ui/button";
 import {Form} from "@/components/ui/form";
 import supabase from "@/db/api/client";
+import {useMetric} from "@/app/metric-context";
 
 import {Set} from "./set-form";
 import {AlertError} from "./alert-error";
@@ -29,6 +30,7 @@ export const formSchema = z.object({
         name: z.string(),
         template_id: z.string().optional(),
         set: z.string().optional(),
+        metric: z.string(),
         created_at: z.string().optional(),
         sets: z.array(
           z.object({
@@ -83,6 +85,7 @@ export function ExerciseForm({
 
   const {user} = useUser();
   const router = useRouter();
+  const {metric} = useMetric();
 
   // const onInvalid = (errors) => console.log({errors});
 
@@ -122,6 +125,7 @@ export function ExerciseForm({
               {
                 name: exercise?.name || "",
                 template_id: templateData[0].id,
+                metric: metric,
               },
             ])
             .select("id");
@@ -198,6 +202,7 @@ export function ExerciseForm({
                   id: exercise.dbId,
                   name: exercise.name,
                   template_id: templateId[0].id,
+                  metric: metric,
                   // created_at: exercise.created_at,
                 },
               ],
@@ -264,6 +269,7 @@ export function ExerciseForm({
           .insert({
             name: exercise?.name ?? "",
             template_id: data?.[0]?.id ?? "",
+            metric: metric,
           })
           .select("id");
 
@@ -345,6 +351,7 @@ export function ExerciseForm({
           return {
             name: exercise.name,
             created_at: exercise.created_at,
+            metric: exercise.metric,
             sets: exercise.sets?.map((set) => {
               return {
                 dbId: set.id,
@@ -372,6 +379,7 @@ export function ExerciseForm({
           return {
             dbId: exercise.id,
             name: exercise.name,
+            metric: metric,
             // created_at: exercise.created_at,
             sets: [
               {
@@ -427,6 +435,7 @@ export function ExerciseForm({
                 key={exercise.dbId}
                 control={form.control as unknown as Control}
                 exercise={exercise}
+                form={form}
                 handleDeleteExercise={handleDeleteExercise}
                 index={index}
                 removeExercise={remove}

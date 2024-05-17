@@ -8,6 +8,7 @@ export interface HistoryWorkoutsCardProps {
     id: string;
     name: string;
     template_id: string;
+    metric: string;
     sets: {
       created_at: string;
       id: string;
@@ -25,6 +26,7 @@ export interface CardBodyProps {
     id: string;
     name: string;
     template_id: string;
+    metric: string;
     sets:
       | {
           created_at: string;

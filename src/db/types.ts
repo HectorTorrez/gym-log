@@ -13,18 +13,21 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          metric: string
           name: string
           template_id: string
         }
         Insert: {
           created_at?: string
           id?: string
+          metric: string
           name: string
           template_id: string
         }
         Update: {
           created_at?: string
           id?: string
+          metric?: string
           name?: string
           template_id?: string
         }
@@ -79,7 +82,7 @@ export type Database = {
           created_at?: string
           id?: string
           name: string
-          template_id?: string
+          template_id: string
         }
         Update: {
           created_at?: string
@@ -106,7 +109,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          id?: string
+          id: string
           name: string
           user_id: string
         }

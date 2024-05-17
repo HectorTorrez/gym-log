@@ -1,10 +1,15 @@
 "use client";
-import type {Control, FieldArrayWithId} from "react-hook-form";
+import type {Control, FieldArrayWithId, UseFormReturn} from "react-hook-form";
 import type {Exercises, FieldsSet} from "@/types/exercise";
+import type {formSchema} from "./exercises-form";
+import type {z} from "zod";
 
 import {useFieldArray} from "react-hook-form";
+import {useEffect} from "react";
 
 import supabase from "@/db/api/client";
+import {useMetric} from "@/app/metric-context";
+import {convertWeight} from "@/lib/convertWeight";
 
 import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "./ui/form";
 import {Input} from "./ui/input";
@@ -19,6 +24,7 @@ interface SetProps {
   removeExercise: (index: number) => void;
   handleDeleteExercise: (id: string) => void;
   onDeleteReusableExercise?: (id: string) => void;
+  form: UseFormReturn<z.infer<typeof formSchema>>; // Replace 'FormInstance<FieldsSet>' with the expected type for the 'form' property.
 }
 
 export function Set({
@@ -28,6 +34,7 @@ export function Set({
   removeExercise,
   handleDeleteExercise,
   onDeleteReusableExercise,
+  form,
 }: SetProps) {
   const {
     fields: untypedFields,
@@ -37,7 +44,7 @@ export function Set({
     control,
     name: `exercises.${index}.sets`,
   });
-
+  const {metric: newMetric} = useMetric();
   const fields = untypedFields as unknown as FieldArrayWithId<FieldsSet>[];
 
   const removeSet = async (id: string, index: number) => {
@@ -46,6 +53,14 @@ export function Set({
   };
 
   const setCount = fields.length;
+
+  useEffect(() => {
+    const values = fields.map((field) => field.weight);
+    const metric = exercise.metric;
+    const res = convertWeight(values[0], metric, newMetric);
+
+    form.setValue(`exercises.${index}.sets.0.weight`, res);
+  }, []);
 
   return (
     <section className="flex flex-col justify-center gap-3">
@@ -101,7 +116,7 @@ export function Set({
               name={`exercises.${index}.sets.${setIndex}.weight`}
               render={({field}) => (
                 <FormItem>
-                  <FormLabel>Weight</FormLabel>
+                  <FormLabel>{newMetric}</FormLabel>
                   <FormControl>
                     <Input
                       className="flex h-[20px] items-center justify-center text-center"

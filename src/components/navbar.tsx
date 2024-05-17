@@ -6,6 +6,8 @@ import {usePathname} from "next/navigation";
 
 import {cn} from "@/lib/utils";
 
+import {DropDownNavbar} from "./dropdown-navbar";
+
 export function Navbar() {
   const {user} = useUser();
 
@@ -16,16 +18,7 @@ export function Navbar() {
     <nav className="z-50  bg-gray-800 px-4 py-2">
       <section className="mx-auto flex w-full max-w-7xl items-center justify-between">
         <section>
-          {/* <Link
-            className={cn("flex items-center gap-1", {
-              "text-blue-400": isActive("/"),
-              "text-white": !isActive("/"),
-            })}
-            href="/"
-          >
-            <History className="h-5 w-5" />
-            <span className="hidden md:block">History</span>
-          </Link> */}
+          <DropDownNavbar />
         </section>
 
         <section className="flex items-center gap-5">

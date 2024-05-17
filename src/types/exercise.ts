@@ -13,11 +13,13 @@ export interface ExerciseList {
   name: string;
   template_id?: string;
   sets?: Set[];
+  metric: string;
 }
 
 export type FieldsSet = {
   name: string;
   sets: {
+    metric: string;
     dbId: string;
     weight: number;
     reps: number;
@@ -35,6 +37,7 @@ export interface Exercises {
   created_at?: string;
   template_id?: string;
   sets: Set[];
+  metric: string;
 }
 
 export interface Set {
