@@ -175,7 +175,7 @@ export function ExerciseForm({
   const onEdit = async (values: z.infer<typeof formSchema>) => {
     setOpen(true);
     setLoading(true);
-    console.log({values});
+
     try {
       const {data: templateId, error: templateError} = await supabase
         .from("template")
@@ -239,12 +239,12 @@ export function ExerciseForm({
               .upsert(
                 [
                   {
-                    id: set.dbId,
+                    id: set.dbId ?? crypto.randomUUID(),
                     weight: set.weight,
                     reps: set.reps,
                     set: set.set || 0,
                     exercise_id: exerciseData?.[0]?.id ?? "",
-                    created_at: set.created_at,
+                    created_at: set.created_at ?? new Date().toString(),
                   },
                 ],
                 {
@@ -252,6 +252,8 @@ export function ExerciseForm({
                 },
               )
               .select("*");
+
+            console.log({error});
 
             router.refresh();
           });
@@ -286,6 +288,8 @@ export function ExerciseForm({
         ])
         .select("id");
 
+      console.log({error});
+
       values.exercises.forEach(async (exercise, index) => {
         const {data: dataExercise, error: exerciseError} = await supabase
           .from("exercise")
@@ -298,6 +302,8 @@ export function ExerciseForm({
           })
           .select("id");
 
+        console.log({exerciseError});
+
         exercise?.sets.forEach(async (set, index) => {
           const {data, error} = await supabase.from("sets").insert({
             weight: set.weight || 0,
@@ -306,6 +312,8 @@ export function ExerciseForm({
             exercise_id: dataExercise?.[0]?.id || "",
             created_at: timestamp,
           });
+
+          console.log({error});
         });
       });
       router.refresh();

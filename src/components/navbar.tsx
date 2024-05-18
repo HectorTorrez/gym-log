@@ -54,7 +54,7 @@ export function Navbar() {
             <span className="hidden md:block">Templates</span>
           </Link> */}
           <Link
-            className={cn("flex items-center gap-5", {
+            className={cn("flex items-center gap-1", {
               "text-blue-400": isActive("/exercises-list"),
               "text-white": !isActive("/exercises-list"),
             })}

@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {formatDate} from "@/lib/formatDate";
@@ -20,8 +21,12 @@ export function HistoryWorkout(props: HistoryWorkoutsCardProps) {
   return (
     <Dialog>
       <DialogTrigger className="max-h-[200px] w-full max-w-[375px]  overflow-hidden rounded-lg  border p-6 text-start">
-        <p className="text-xl font-bold text-white">{props.name}</p>
-        <p>{formatDate(props.created_at)}</p>
+        <DialogTitle>
+          <div>
+            <span className="text-xl font-bold text-white">{props.name}</span>
+          </div>
+          <span className="text-[1rem] text-gray-500">{formatDate(props.created_at)}</span>
+        </DialogTitle>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
