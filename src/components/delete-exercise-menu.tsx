@@ -44,7 +44,7 @@ export function DeleteExerciseMenu({
             isEditing
             isEditingTemplate
             editButton="Edit template"
-            isEditingClassName="p-2 text-[14px] text-white"
+            isEditingClassName="p-2 text-[14px] "
             isEditingExercises={isEditingExercises}
             isEditingTemplateName={isEditingTemplateName}
             isReusable={false}

@@ -1,21 +1,4 @@
-import {
-  Cloud,
-  CreditCard,
-  Dot,
-  Github,
-  Keyboard,
-  LifeBuoy,
-  LogOut,
-  Mail,
-  MessageSquare,
-  Plus,
-  PlusCircle,
-  Settings,
-  User,
-  UserPlus,
-  Users,
-  Weight,
-} from "lucide-react";
+import {Dot, User, Weight} from "lucide-react";
 import {useState} from "react";
 import {DropdownMenuRadioGroup, DropdownMenuRadioItem} from "@radix-ui/react-dropdown-menu";
 
@@ -24,7 +7,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuPortal,
   DropdownMenuSeparator,
@@ -48,7 +30,7 @@ export function DropDownNavbar() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost">
+        <Button variant="outline">
           <User className="h-5 w-5" />
         </Button>
       </DropdownMenuTrigger>

@@ -2,14 +2,11 @@
 
 import type {ExerciseList} from "@/types/exercise";
 
-import {useState} from "react";
-
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 
@@ -22,22 +19,15 @@ interface AddExerciseProps {
 }
 
 export default function AddExercise({handleListExercises}: AddExerciseProps) {
-  // const [isChanged, setIsChanged] = useState(false);
-
-  // const handleChange = (value: boolean) => {
-  //   setIsChanged(value);
-  // };
-
   return (
     <Dialog>
-      <DialogTrigger className="w-full rounded-lg border border-gray-50 bg-white p-3 font-bold text-black">
+      <DialogTrigger className="w-full rounded-lg border border-blue-400 p-3 font-bold  text-blue-400">
         Add exercise
       </DialogTrigger>
       <DialogContent>
         <DialogHeader className="mb-10 mt-10">
           <CreateExercise />
           <DialogDescription>
-            {/* <ChooseExerciseServer handleListExercises={handleListExercises} /> */}
             <ChooseExercise handleListExercises={handleListExercises} />
           </DialogDescription>
         </DialogHeader>

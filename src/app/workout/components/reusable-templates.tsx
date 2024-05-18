@@ -45,7 +45,7 @@ export function ReusableTemplates(props: ReusableTemplatesProps) {
   return (
     <Dialog>
       <DialogTrigger className="max-h-[200px] w-full max-w-[375px]  overflow-hidden rounded-lg  border p-6 text-start">
-        <p className="text-xl font-bold text-white">{name}</p>
+        <p className="text-xl font-bold ">{name}</p>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

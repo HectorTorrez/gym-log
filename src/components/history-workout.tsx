@@ -23,7 +23,7 @@ export function HistoryWorkout(props: HistoryWorkoutsCardProps) {
       <DialogTrigger className="max-h-[200px] w-full max-w-[375px]  overflow-hidden rounded-lg  border p-6 text-start">
         <DialogTitle>
           <div>
-            <span className="text-xl font-bold text-white">{props.name}</span>
+            <span className="text-xl font-bold ">{props.name}</span>
           </div>
           <span className="text-[1rem] text-gray-500">{formatDate(props.created_at)}</span>
         </DialogTitle>
@@ -43,7 +43,7 @@ export function HistoryWorkout(props: HistoryWorkoutsCardProps) {
             <HistoryWorkoutsCard
               {...props}
               className="text-start"
-              contentClassName="flex flex-col gap-3 max-h-[300px] overflow-y-auto"
+              contentClassName="flex flex-col gap-3 max-h-[300px] overflow-y-auto scrollbar "
             />
           </DialogDescription>
           {/* <DialogFooter>

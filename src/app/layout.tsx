@@ -5,25 +5,35 @@ import "./globals.css";
 import AuthProvider from "@/auth/provider";
 import {Navbar} from "@/components/navbar";
 import ReactQueryProvider from "@/components/ReactQueryClientProvider";
+import {ThemeProvider} from "@/components/theme-provider";
 
 import {MetricProvider} from "./metric-context";
 
 export const metadata: Metadata = {
-  title: "gym-log",
-  description: "Add your gym logs",
+  title: "Workout Tracker",
+  description: "A simple workout tracker",
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en">
-      <body className="dark    bg-background font-sans antialiased ">
+      <body className="    bg-background font-sans antialiased ">
         <AuthProvider>
           <ReactQueryProvider>
             <MetricProvider>
-              <header>
-                <Navbar />
-              </header>
-              <main className="mx-auto max-w-7xl px-4">{children}</main>
+              <ThemeProvider
+                disableTransitionOnChange
+                enableSystem
+                attribute="class"
+                defaultTheme="system"
+              >
+                <main className="mx-auto max-w-7xl px-4">
+                  <header>
+                    <Navbar />
+                  </header>
+                  {children}
+                </main>
+              </ThemeProvider>
             </MetricProvider>
           </ReactQueryProvider>
         </AuthProvider>

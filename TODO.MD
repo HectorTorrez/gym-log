@@ -5,4 +5,4 @@
 - [ ] Refactor interface
 - [ x ] Fix duplicate exercises when is updated
 - [ x ] Fix convert metric
-- [ ] Fix order in exercises and sets
+- [ x ] Fix order in exercises and sets

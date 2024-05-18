@@ -13,7 +13,7 @@ export interface ExerciseList {
   name: string;
   template_id?: string;
   sets?: Set[];
-  metric: string;
+  metric?: string;
   order?: number;
 }
 

@@ -49,13 +49,6 @@ export default function ChooseExercise({handleListExercises}: ChooseExercisesPro
     return byName && byType && byCategory;
   });
 
-  const handleSelect = (value: string[]) => {
-    value.forEach((exercise) => {
-      setSelectedExercises([...selectedExercises, {id: crypto.randomUUID(), name: exercise}]);
-    });
-    // setSelectedExercises(value);
-  };
-
   const handleAddExercise = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     handleListExercises(selectedExercises);
@@ -80,12 +73,10 @@ export default function ChooseExercise({handleListExercises}: ChooseExercisesPro
   return (
     <section>
       <section className="mb-3 mt-3 ">
-        <h3 className="text-xl font-bold text-white">Choose exercise</h3>
+        <h3 className="text-xl font-bold ">Choose exercise</h3>
         <form className="flex flex-col gap-5" onSubmit={handleAddExercise}>
           <Input
-            className="mt-2 w-full rounded-lg border border-gray-200 bg-white p-2
-            placeholder-gray-400 placeholder:text-black focus:border-transparent focus:outline-none focus:ring-2
-            focus:ring-gray-300
+            className="mt-2 w-full rounded-lg border 
             "
             placeholder="Search exercise"
             type="text"
@@ -100,7 +91,11 @@ export default function ChooseExercise({handleListExercises}: ChooseExercisesPro
             onCategoryChange={onChangeCategory}
           />
           <DialogClose asChild>
-            <Button className="w-full bg-blue-300 " type="submit">
+            <Button
+              className="w-full border border-blue-400 text-blue-400"
+              type="submit"
+              variant="ghost"
+            >
               Add exercise
             </Button>
           </DialogClose>
@@ -114,9 +109,7 @@ export default function ChooseExercise({handleListExercises}: ChooseExercisesPro
           // onValueChange={(value) => handleSelect(value)}
           onValueChange={(value) => setToggleSelected(value)}
         >
-          {filteredData?.length === 0 && (
-            <p className="text-center text-white">No exercises found</p>
-          )}
+          {filteredData?.length === 0 && <p className="text-center ">No exercises found</p>}
           {filteredData?.map((exercise) => (
             <ToggleGroupItem key={exercise.id} className="w-full p-2" value={exercise.name}>
               {exercise.name}
