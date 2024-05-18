@@ -99,12 +99,10 @@ export function ExerciseForm({
     try {
       const {data: templateData, error: templateError} = await supabase
         .from("template")
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-expect-error
         .insert([
           {
             name: templateName.length === 0 ? "Template name" : templateName,
-            user_id: user?.id,
+            user_id: user?.id ?? "",
             created_at: new Date().toString(),
           },
         ])
@@ -112,11 +110,10 @@ export function ExerciseForm({
 
       const {data: reusableTemplate, error: reusableTemplateError} = await supabase
         .from("reusables_templates")
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-expect-error
+
         .insert({
           name: templateName.length === 0 ? "Template name" : templateName,
-          user_id: user?.id,
+          user_id: user?.id ?? "",
           id: crypto.randomUUID(),
         })
         .select("id");
@@ -179,19 +176,18 @@ export function ExerciseForm({
     try {
       const {data: templateId, error: templateError} = await supabase
         .from("template")
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-expect-error
         .upsert(
           [
             {
               id: values.exercises[0] ? values.exercises[0].template_id ?? "" : "",
               created_at: values.exercises[0]?.created_at ?? new Date().toString(),
               name: templateName.length === 0 ? "Template name" : templateName,
-              user_id: user?.id,
+              user_id: user?.id ?? "",
             },
           ],
+
           {
-            unique: "id",
+            onConflict: "id",
           },
         )
         .select("id");
@@ -203,8 +199,7 @@ export function ExerciseForm({
           if (!exercise) return setError(true);
           const {data: exerciseData, error: exerciseError} = await supabase
             .from("exercise")
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
-            //@ts-ignore
+
             .upsert(
               [
                 {
@@ -224,7 +219,7 @@ export function ExerciseForm({
                 },
               ],
               {
-                unique: "id",
+                onConflict: "id",
               },
               // exercise.template_id ??
             )
@@ -234,8 +229,7 @@ export function ExerciseForm({
           exercise?.sets.forEach(async (set) => {
             const {data, error} = await supabase
               .from("sets")
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
-              //@ts-ignore
+
               .upsert(
                 [
                   {
@@ -248,7 +242,7 @@ export function ExerciseForm({
                   },
                 ],
                 {
-                  unique: "id",
+                  onConflict: "id",
                 },
               )
               .select("*");
@@ -334,33 +328,31 @@ export function ExerciseForm({
       if (isEditingTemplate) {
         const {data: reusableTemplate} = await supabase
           .from("reusables_templates")
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
-          //@ts-ignore
+
           .upsert(
             [
               {
                 name: templateName.length === 0 ? "Template name" : templateName,
-                user_id: user?.id,
+                user_id: user?.id ?? "",
                 id: values.exercises[0]?.template_id ?? "",
               },
             ],
-            {unique: "id"},
+            {onConflict: "id"},
           )
           .select("id");
 
         for (const exercise of values.exercises) {
           await supabase
             .from("reusable_exercise")
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
-            //@ts-ignore
+
             .upsert(
               {
                 name: exercise?.name as string,
                 template_id: (reusableTemplate?.[0]?.id as string) || "", // Add type assertion here
-                id: exercise?.dbId,
+                id: exercise?.dbId ?? "",
               },
               {
-                unique: "id",
+                onConflict: "id",
               },
             )
             .select("id");
