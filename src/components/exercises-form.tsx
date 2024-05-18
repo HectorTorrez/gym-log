@@ -108,7 +108,7 @@ export function ExerciseForm({
         ])
         .select("id");
 
-      const {data: reusableTemplate, error: reusableTemplateError} = await supabase
+      const {data: reusableTemplate} = await supabase
         .from("reusables_templates")
 
         .insert({
@@ -133,17 +133,13 @@ export function ExerciseForm({
             ])
             .select("id");
 
-          const {data: reusableExercise, error: errorReusable} = await supabase
-            .from("reusable_exercise")
-            .insert({
-              name: exercise?.name || "",
-              template_id: (reusableTemplate?.[0]?.id as string) || "", // Add type assertion here
-            });
-
-          console.log({errorReusable});
+          await supabase.from("reusable_exercise").insert({
+            name: exercise?.name || "",
+            template_id: (reusableTemplate?.[0]?.id as string) || "", // Add type assertion here
+          });
 
           exercise?.sets.forEach(async (set, index) => {
-            const {data, error} = await supabase
+            await supabase
               .from("sets")
               .insert([
                 {
@@ -192,12 +188,10 @@ export function ExerciseForm({
         )
         .select("id");
 
-      console.log({templateError});
-
       if (!templateError) {
         values.exercises.forEach(async (exercise) => {
           if (!exercise) return setError(true);
-          const {data: exerciseData, error: exerciseError} = await supabase
+          const {data: exerciseData} = await supabase
             .from("exercise")
 
             .upsert(
@@ -221,13 +215,11 @@ export function ExerciseForm({
               {
                 onConflict: "id",
               },
-              // exercise.template_id ??
             )
             .select("id");
 
-          console.log({exerciseError});
           exercise?.sets.forEach(async (set) => {
-            const {data, error} = await supabase
+            await supabase
               .from("sets")
 
               .upsert(
@@ -246,8 +238,6 @@ export function ExerciseForm({
                 },
               )
               .select("*");
-
-            console.log({error});
 
             router.refresh();
           });
@@ -270,7 +260,7 @@ export function ExerciseForm({
     const timestamp = new Date().toString();
 
     try {
-      const {data, error} = await supabase
+      const {data} = await supabase
         .from("template")
         .insert([
           {
@@ -282,10 +272,8 @@ export function ExerciseForm({
         ])
         .select("id");
 
-      console.log({error});
-
       values.exercises.forEach(async (exercise, index) => {
-        const {data: dataExercise, error: exerciseError} = await supabase
+        const {data: dataExercise} = await supabase
           .from("exercise")
           .insert({
             name: exercise?.name ?? "",
@@ -296,18 +284,14 @@ export function ExerciseForm({
           })
           .select("id");
 
-        console.log({exerciseError});
-
         exercise?.sets.forEach(async (set, index) => {
-          const {data, error} = await supabase.from("sets").insert({
+          await supabase.from("sets").insert({
             weight: set.weight || 0,
             reps: set.reps,
             set: index + 1,
             exercise_id: dataExercise?.[0]?.id || "",
             created_at: timestamp,
           });
-
-          console.log({error});
         });
       });
       router.refresh();
@@ -447,9 +431,9 @@ export function ExerciseForm({
         className="mb-10 mt-10 flex flex-col gap-5"
         onSubmit={
           isEditingTemplate
-            ? form.handleSubmit(handleEditReusableTemplate, (error) => console.log({error}))
+            ? form.handleSubmit(handleEditReusableTemplate)
             : isReusable
-              ? form.handleSubmit(handleAddWithReusableTemplate, (error) => console.log({error}))
+              ? form.handleSubmit(handleAddWithReusableTemplate)
               : isEditing
                 ? form.handleSubmit(onEdit)
                 : form.handleSubmit(onSubmit)
