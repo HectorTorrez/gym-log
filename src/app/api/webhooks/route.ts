@@ -2,6 +2,7 @@ import type {WebhookEvent} from "@clerk/nextjs/server";
 
 import {Webhook} from "svix";
 import {headers} from "next/headers";
+import {NextResponse} from "next/server";
 
 import {supabase} from "@/db/api/server";
 
@@ -57,16 +58,32 @@ export async function POST(req: Request) {
   const eventType = evt.type;
 
   if (eventType === "user.created") {
-    await supabase.from("users").insert([
+    const {data, error} = await supabase.from("users").insert([
       {
         user_id: id,
         email: evt.data.email_addresses[0]?.email_address ?? "no email",
       },
     ]);
-  } else if (eventType === "user.deleted") {
-    await supabase.from("users").delete().match({user_id: id});
-  }
 
+    if (error) {
+      console.error("Error inserting user:", error);
+
+      return NextResponse.json({error}, {status: 500});
+    }
+
+    return NextResponse.json(data, {status: 200});
+  } else if (eventType === "user.deleted") {
+    const {data, error} = await supabase.from("users").delete().match({user_id: id});
+
+    if (error) {
+      console.error("Error deleting user:", error);
+
+      return NextResponse.json({error}, {status: 500});
+    }
+
+    return NextResponse.json(data, {status: 200});
+  }
+  console.log({id, eventType});
   // console.log(`Webhook with and ID of ${id} and type of ${eventType}`);
   // console.log("Webhook body:", body);
 
