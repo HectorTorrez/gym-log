@@ -53,7 +53,16 @@ export function Navbar() {
             <Rows4 />
             <span className="hidden md:block">Exercises</span>
           </Link>
-          {!user && <SignInButton />}
+          {!user && (
+            <Link
+              className={cn("flex items-center gap-1", {
+                "text-blue-400": isActive("/sign-in"),
+              })}
+              href="/sign-in"
+            >
+              Sign in
+            </Link>
+          )}
 
           <SignedIn>
             <UserButton />
