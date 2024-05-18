@@ -14,6 +14,7 @@ export interface ExerciseList {
   template_id?: string;
   sets?: Set[];
   metric: string;
+  order?: number;
 }
 
 export type FieldsSet = {
@@ -37,7 +38,7 @@ export interface Exercises {
   created_at?: string;
   template_id?: string;
   sets: Set[];
-  metric: string;
+  metric?: string;
 }
 
 export interface Set {

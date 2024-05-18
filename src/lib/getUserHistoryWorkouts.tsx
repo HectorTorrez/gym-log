@@ -19,12 +19,19 @@ export async function getUsersHistoryWorkouts() {
 
     if (template) {
       template.forEach((t) => {
-        t.exercise.sort((a, b) => Number(a.created_at) - Number(b.created_at));
+        t.exercise.sort((a, b) => Number(a.order) - Number(b.order));
         t.exercise.forEach((e) => {
           e.sets.sort((a, b) => a.set - b.set);
         });
       });
     }
+    // }
+    // template?.forEach((row) => {
+    //   row.exercise.sort((a, b) => a.order.localeCompare(b.order));
+    //   row.exercise.forEach((exercise) => {
+    //     exercise.sets.sort((a, b) => a.created_at.localeCompare(b.created_at));
+    //   });
+    // });
 
     return template;
   } catch (error) {

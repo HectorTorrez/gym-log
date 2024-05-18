@@ -15,13 +15,15 @@ export type Database = {
           id: string
           metric: string
           name: string
+          order: number
           template_id: string
         }
         Insert: {
-          created_at?: string
+          created_at: string
           id?: string
           metric: string
           name: string
+          order: number
           template_id: string
         }
         Update: {
@@ -29,6 +31,7 @@ export type Database = {
           id?: string
           metric?: string
           name?: string
+          order?: number
           template_id?: string
         }
         Relationships: [
@@ -131,7 +134,7 @@ export type Database = {
           weight: number
         }
         Insert: {
-          created_at?: string
+          created_at: string
           exercise_id: string
           id?: string
           reps: number
@@ -164,7 +167,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          created_at?: string
+          created_at: string
           id?: string
           name: string
           user_id: string

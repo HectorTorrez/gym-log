@@ -30,14 +30,16 @@ export const formSchema = z.object({
         name: z.string(),
         template_id: z.string().optional(),
         set: z.string().optional(),
-        metric: z.string(),
+        metric: z.string().optional(),
         created_at: z.string().optional(),
+        order: z.number().optional(),
         sets: z.array(
           z.object({
             dbId: z.string().optional(),
             weight: z.coerce.number().nonnegative(),
             reps: z.coerce.number().nonnegative(),
             set: z.coerce.number().optional(),
+            created_at: z.string().optional(),
           }),
         ),
       })
@@ -92,6 +94,7 @@ export function ExerciseForm({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setOpen(true);
     setLoading(true);
+    const timestamp = new Date().toString();
 
     try {
       const {data: templateData, error: templateError} = await supabase
@@ -102,6 +105,7 @@ export function ExerciseForm({
           {
             name: templateName.length === 0 ? "Template name" : templateName,
             user_id: user?.id,
+            created_at: new Date().toString(),
           },
         ])
         .select("id");
@@ -118,7 +122,7 @@ export function ExerciseForm({
         .select("id");
 
       if (!templateError) {
-        values.exercises.forEach(async (exercise) => {
+        values.exercises.forEach(async (exercise, index) => {
           const {data: exerciseData} = await supabase
             .from("exercise")
             .insert([
@@ -126,6 +130,8 @@ export function ExerciseForm({
                 name: exercise?.name || "",
                 template_id: templateData[0].id,
                 metric: metric,
+                created_at: timestamp,
+                order: index + 1,
               },
             ])
             .select("id");
@@ -147,7 +153,8 @@ export function ExerciseForm({
                   weight: set.weight,
                   reps: set.reps,
                   set: index + 1,
-                  exercise_id: exerciseData?.[0]?.id ?? "", // Add null check here
+                  exercise_id: exerciseData?.[0]?.id ?? "",
+                  created_at: timestamp,
                 },
               ])
               .select("id");
@@ -168,7 +175,7 @@ export function ExerciseForm({
   const onEdit = async (values: z.infer<typeof formSchema>) => {
     setOpen(true);
     setLoading(true);
-
+    console.log({values});
     try {
       const {data: templateId, error: templateError} = await supabase
         .from("template")
@@ -178,7 +185,7 @@ export function ExerciseForm({
           [
             {
               id: values.exercises[0] ? values.exercises[0].template_id ?? "" : "",
-
+              created_at: values.exercises[0]?.created_at ?? new Date().toString(),
               name: templateName.length === 0 ? "Template name" : templateName,
               user_id: user?.id,
             },
@@ -188,6 +195,8 @@ export function ExerciseForm({
           },
         )
         .select("id");
+
+      console.log({templateError});
 
       if (!templateError) {
         values.exercises.forEach(async (exercise) => {
@@ -203,7 +212,15 @@ export function ExerciseForm({
                   name: exercise.name,
                   template_id: templateId[0].id,
                   metric: metric,
-                  // created_at: exercise.created_at,
+                  order: exercise.order,
+                  created_at: exercise.created_at,
+                } as {
+                  created_at: string;
+                  id?: string;
+                  metric: string;
+                  name: string;
+                  order: number;
+                  template_id: string;
                 },
               ],
               {
@@ -213,6 +230,7 @@ export function ExerciseForm({
             )
             .select("id");
 
+          console.log({exerciseError});
           exercise?.sets.forEach(async (set) => {
             const {data, error} = await supabase
               .from("sets")
@@ -226,6 +244,7 @@ export function ExerciseForm({
                     reps: set.reps,
                     set: set.set || 0,
                     exercise_id: exerciseData?.[0]?.id ?? "",
+                    created_at: set.created_at,
                   },
                 ],
                 {
@@ -251,6 +270,9 @@ export function ExerciseForm({
   const handleAddWithReusableTemplate = async (values: z.infer<typeof formSchema>) => {
     setOpen(true);
     setLoading(true);
+
+    const timestamp = new Date().toString();
+
     try {
       const {data, error} = await supabase
         .from("template")
@@ -258,18 +280,21 @@ export function ExerciseForm({
           {
             id: crypto.randomUUID(),
             name: templateName.length === 0 ? "Template name" : templateName,
-            user_id: user?.id || "", // Ensure user_id is always a string
+            user_id: user?.id || "",
+            created_at: new Date().toString(),
           },
         ])
         .select("id");
 
-      values.exercises.forEach(async (exercise) => {
+      values.exercises.forEach(async (exercise, index) => {
         const {data: dataExercise, error: exerciseError} = await supabase
           .from("exercise")
           .insert({
             name: exercise?.name ?? "",
             template_id: data?.[0]?.id ?? "",
             metric: metric,
+            created_at: timestamp,
+            order: index + 1,
           })
           .select("id");
 
@@ -279,6 +304,7 @@ export function ExerciseForm({
             reps: set.reps,
             set: index + 1,
             exercise_id: dataExercise?.[0]?.id || "",
+            created_at: timestamp,
           });
         });
       });
@@ -352,6 +378,7 @@ export function ExerciseForm({
             name: exercise.name,
             created_at: exercise.created_at,
             metric: exercise.metric,
+            order: exercise.order,
             sets: exercise.sets?.map((set) => {
               return {
                 dbId: set.id,
@@ -359,6 +386,7 @@ export function ExerciseForm({
                 reps: set.reps,
                 exercise_id: set.exercise_id,
                 ...(isEditing ? {set: set.set} : {}),
+                created_at: set.created_at,
               };
             }) ?? [
               {
@@ -380,7 +408,7 @@ export function ExerciseForm({
             dbId: exercise.id,
             name: exercise.name,
             metric: metric,
-            // created_at: exercise.created_at,
+
             sets: [
               {
                 dbId: crypto.randomUUID(),
@@ -419,14 +447,13 @@ export function ExerciseForm({
         className="mb-10 mt-10 flex flex-col gap-5"
         onSubmit={
           isEditingTemplate
-            ? form.handleSubmit(handleEditReusableTemplate)
+            ? form.handleSubmit(handleEditReusableTemplate, (error) => console.log({error}))
             : isReusable
-              ? form.handleSubmit(handleAddWithReusableTemplate)
+              ? form.handleSubmit(handleAddWithReusableTemplate, (error) => console.log({error}))
               : isEditing
                 ? form.handleSubmit(onEdit)
                 : form.handleSubmit(onSubmit)
         }
-        // onSubmit={}
       >
         <section className="flex max-h-[340px] flex-col gap-5 overflow-y-auto">
           {fields.map((exercise, index) => {

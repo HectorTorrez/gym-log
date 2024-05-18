@@ -57,7 +57,7 @@ export function Set({
   useEffect(() => {
     const values = fields.map((field) => field.weight);
     const metric = exercise.metric;
-    const res = convertWeight(values[0], metric, newMetric);
+    const res = convertWeight(values[0], metric ?? "", newMetric);
 
     form.setValue(`exercises.${index}.sets.0.weight`, res);
   }, []);
