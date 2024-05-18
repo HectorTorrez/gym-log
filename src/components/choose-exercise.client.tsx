@@ -83,7 +83,7 @@ export default function ChooseExercise({handleListExercises}: ChooseExercisesPro
             value={searchExercise}
             onChange={(e) => setSearchExercise(e.target.value)}
           />
-          {/* <FilterExercises /> */}
+
           <TypeSelected isCreate={false} options={types || []} onTypeChange={onChangeType} />
           <CategorySelected
             isCreate={false}
@@ -111,7 +111,11 @@ export default function ChooseExercise({handleListExercises}: ChooseExercisesPro
         >
           {filteredData?.length === 0 && <p className="text-center ">No exercises found</p>}
           {filteredData?.map((exercise) => (
-            <ToggleGroupItem key={exercise.id} className="w-full p-2" value={exercise.name}>
+            <ToggleGroupItem
+              key={exercise.id}
+              className="w-full p-2"
+              value={`${exercise.name} (${exercise.type})`}
+            >
               {exercise.name}
             </ToggleGroupItem>
           ))}

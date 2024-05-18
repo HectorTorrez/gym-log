@@ -25,13 +25,6 @@ export async function getUsersHistoryWorkouts() {
         });
       });
     }
-    // }
-    // template?.forEach((row) => {
-    //   row.exercise.sort((a, b) => a.order.localeCompare(b.order));
-    //   row.exercise.forEach((exercise) => {
-    //     exercise.sets.sort((a, b) => a.created_at.localeCompare(b.created_at));
-    //   });
-    // });
 
     return template;
   } catch (error) {

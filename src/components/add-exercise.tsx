@@ -12,7 +12,6 @@ import {
 
 import ChooseExercise from "./choose-exercise.client";
 import CreateExercise from "./create-exercise";
-// import ChooseExerciseServer from "./choose-exercise";
 
 interface AddExerciseProps {
   handleListExercises: (exercises: ExerciseList[]) => void;
