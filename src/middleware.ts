@@ -1,6 +1,5 @@
-import {authMiddleware} from "@clerk/nextjs";
+import {authMiddleware} from "@clerk/nextjs/server";
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 export default authMiddleware({
   // publicRoutes: ["/"],
   ignoredRoutes: ["./app/api/webhooks(.*)"],
