@@ -64,9 +64,9 @@ export function Navbar() {
             </Link>
           )}
 
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
+          {/* <SignedIn> */}
+          {user ? <UserButton /> : null}
+          {/* </SignedIn> */}
         </section>
       </section>
     </nav>
