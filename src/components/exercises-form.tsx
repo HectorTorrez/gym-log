@@ -96,8 +96,6 @@ export function ExerciseForm({
     setLoading(true);
     const timestamp = new Date().toString();
 
-    console.log({values});
-
     try {
       const {data: templateData, error: templateError} = await supabase
         .from("template")
@@ -155,8 +153,9 @@ export function ExerciseForm({
               .select("id");
           });
         });
+        router.refresh();
       }
-      router.refresh();
+
       setLoading(false);
       handleClearTemplate();
       setOpen(false);
