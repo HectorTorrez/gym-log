@@ -4,7 +4,7 @@ import {Webhook} from "svix";
 import {headers} from "next/headers";
 import {NextResponse} from "next/server";
 
-import {supabase} from "@/db/api/server";
+import supabase from "@/db/api/server";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
@@ -58,12 +58,13 @@ export async function POST(req: Request) {
   const eventType = evt.type;
 
   if (eventType === "user.created") {
-    const {data, error} = await supabase.from("users").insert([
-      {
-        user_id: id,
-        email: evt.data.email_addresses[0]?.email_address ?? "no email",
-      },
-    ]);
+    if (!id) return new Response("No user ID", {status: 400});
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-expect-error
+    const {data, error} = await supabase.from("users").insert({
+      user_id: id,
+      email: evt.data.email_addresses[0]?.email_address ?? "no email",
+    });
 
     if (error) {
       console.error("Error inserting user:", error);
