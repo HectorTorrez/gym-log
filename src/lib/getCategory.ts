@@ -1,4 +1,4 @@
-import {supabase} from "@/db/api/server";
+import supabase from "@/db/api/server";
 
 export const revalidate = 1;
 

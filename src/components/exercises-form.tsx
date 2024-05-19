@@ -96,6 +96,8 @@ export function ExerciseForm({
     setLoading(true);
     const timestamp = new Date().toString();
 
+    console.log({values});
+
     try {
       const {data: templateData, error: templateError} = await supabase
         .from("template")

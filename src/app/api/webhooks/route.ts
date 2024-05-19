@@ -3,8 +3,14 @@ import type {WebhookEvent} from "@clerk/nextjs/server";
 import {Webhook} from "svix";
 import {headers} from "next/headers";
 import {NextResponse} from "next/server";
+import {createClient} from "@supabase/supabase-js";
 
 import supabase from "@/db/api/server";
+
+const supabaseService = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE!,
+);
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
@@ -59,9 +65,8 @@ export async function POST(req: Request) {
 
   if (eventType === "user.created") {
     if (!id) return new Response("No user ID", {status: 400});
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-expect-error
-    const {data, error} = await supabase.from("users").insert({
+
+    const {data, error} = await supabaseService.from("users").insert({
       user_id: id,
       email: evt.data.email_addresses[0]?.email_address ?? "no email",
     });
@@ -74,7 +79,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(data, {status: 200});
   } else if (eventType === "user.deleted") {
-    const {data, error} = await supabase.from("users").delete().match({user_id: id});
+    const {data, error} = await supabaseService.from("users").delete().match({user_id: id});
 
     if (error) {
       console.error("Error deleting user:", error);

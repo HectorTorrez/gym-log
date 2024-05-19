@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {supabase} from "@/db/api/server";
+import supabase from "@/db/api/client";
 
 interface ReusableTemplatesProps {
   created_at: string;
