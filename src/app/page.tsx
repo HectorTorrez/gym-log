@@ -11,11 +11,11 @@ export default async function WorkoutHistoryPage() {
   return (
     <div>
       <section className="pb-5 pt-5">
-        <h2>History Workouts</h2>
+        <h2>Workout History</h2>
       </section>
       <section className="flex flex-col gap-5 sm:grid sm:grid-cols-2 md:grid-cols-3">
         {template?.length === 0 && (
-          <div className="text-center text-xl">No history workouts, create some</div>
+          <div className="text-center text-xl">No Workouts History, create one</div>
         )}
         {template?.map((exercise) => {
           return <HistoryWorkout key={exercise.id} {...exercise} />;
