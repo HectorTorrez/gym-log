@@ -68,7 +68,7 @@ export async function POST(req: Request) {
 
     const {data, error} = await supabaseService.from("users").insert({
       user_id: id,
-      email: evt.data.email_addresses[0]?.email_address ?? "no email",
+      email: evt.data.email_addresses[0]?.email_address ?? "No email",
       username: evt.data.username,
       name: evt.data.first_name + " " + evt.data.last_name,
       role: 'client'
