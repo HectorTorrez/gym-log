@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 "use client";
 
 import {createContext, useContext, useEffect, useState} from "react";
@@ -13,20 +12,25 @@ const MetricContext = createContext<MetricContext>({
 });
 
 export function MetricProvider({children}: {children: React.ReactNode}) {
-  const [metric, setMetric] = useState<"lbs" | "kg">(() => {
-    const metric = localStorage.getItem("metric") as "lbs" | "kg";
-
-    return metric;
-  });
+  const [metric, setMetric] = useState<"lbs" | "kg">("kg");
 
   const handleChangeMetric = (value: string) => {
     setMetric(value as "lbs" | "kg");
   };
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     localStorage.setItem("metric", metric ?? "kg");
   }, [metric]);
+
+  useEffect(() => {
+    // const localMetric = localStorage.getItem("metric") as "lbs" | "kg";
+
+    // return localMetric;
+
+    const localMetric = localStorage.getItem("metric") as "lbs" | "kg";
+
+    setMetric(localMetric);
+  }, []);
 
   return (
     <MetricContext.Provider value={{metric, handleChangeMetric}}>{children}</MetricContext.Provider>
