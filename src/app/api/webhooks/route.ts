@@ -69,6 +69,9 @@ export async function POST(req: Request) {
     const {data, error} = await supabaseService.from("users").insert({
       user_id: id,
       email: evt.data.email_addresses[0]?.email_address ?? "no email",
+      username: evt.data.username,
+      name: evt.data.first_name + " " + evt.data.last_name,
+      role: 'client'
     });
 
     if (error) {
@@ -78,7 +81,23 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(data, {status: 200});
-  } else if (eventType === "user.deleted") {
+  } 
+
+  if (eventType === "user.updated") {
+    if (evt.data.username === null) {
+      return new Response("No username", {status: 400});
+    }
+    await supabase
+      .from("users")
+      .update({
+        email: evt.data.email_addresses[0]?.email_address ?? null,
+        username: evt.data.username,
+        name: evt.data.first_name + " " + evt.data.last_name,
+      })
+      .match({user_id: id});
+  }
+
+  if (eventType === "user.deleted") {
     const {data, error} = await supabaseService.from("users").delete().match({user_id: id});
 
     if (error) {
