@@ -20,7 +20,7 @@ export function Navbar() {
       <section className="mx-auto flex w-full max-w-7xl items-center justify-between ">
         <section className="flex items-center gap-3">
           <DropDownNavbar />
-          <ModeToggle />
+
         </section>
 
         <section className="flex items-center gap-5">

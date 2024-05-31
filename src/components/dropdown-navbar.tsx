@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {useMetric} from "@/app/metric-context";
 import {cn} from "@/lib/utils";
+import { ModeToggle } from "./mode-toggle";
 
 export function DropDownNavbar() {
   const {handleChangeMetric, metric} = useMetric();
@@ -35,7 +36,10 @@ export function DropDownNavbar() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>Settings</DropdownMenuLabel>
+        <DropdownMenuLabel className="flex items-center gap-4 justify-between">Settings
+        <ModeToggle />
+
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>
