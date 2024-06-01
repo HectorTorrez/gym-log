@@ -8,6 +8,7 @@ import {cn} from "@/lib/utils";
 
 import {DropDownNavbar} from "./dropdown-navbar";
 import {ModeToggle} from "./mode-toggle";
+import { FriendsNotifications } from "./friends-notifications";
 
 export function Navbar() {
   const {user} = useUser();
@@ -20,7 +21,7 @@ export function Navbar() {
       <section className="mx-auto flex w-full max-w-7xl items-center justify-between ">
         <section className="flex items-center gap-3">
           <DropDownNavbar />
-
+          <FriendsNotifications/>
         </section>
 
         <section className="flex items-center gap-5">
