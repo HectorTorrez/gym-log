@@ -6,7 +6,7 @@ import AuthProvider from "@/auth/provider";
 import {Navbar} from "@/components/navbar";
 import ReactQueryProvider from "@/components/ReactQueryClientProvider";
 import {ThemeProvider} from "@/components/theme-provider";
-
+import { Toaster } from "@/components/ui/toaster"
 import {MetricProvider} from "./metric-context";
 
 export const metadata: Metadata = {
@@ -33,6 +33,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                   </header>
                   {children}
                 </main>
+                <Toaster />
               </ThemeProvider>
             </MetricProvider>
           </ReactQueryProvider>
