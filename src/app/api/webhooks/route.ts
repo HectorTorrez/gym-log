@@ -89,15 +89,18 @@ export async function POST(req: Request) {
     if (evt.data.username === null) {
       return new Response("No username", {status: 400});
     }
-    await supabase
+    if(!id) return new Response("No user ID", {status: 400})
+  await supabaseService
       .from("users")
       .update({
         email: evt.data.email_addresses[0]?.email_address ?? 'No email',
         username: evt.data.username,
         name: evt.data.first_name + " " + evt.data.last_name,
-        image: evt.data.image_url
+        image: evt.data.image_url,
+
       })
-      .match({user_id: id});
+      .eq('user_id', id).select();
+
   }
 
   if (eventType === "user.deleted") {
@@ -111,7 +114,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(data, {status: 200});
   }
-  console.log({id, eventType});
+
   // console.log(`Webhook with and ID of ${id} and type of ${eventType}`);
   // console.log("Webhook body:", body);
 
