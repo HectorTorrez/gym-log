@@ -71,7 +71,9 @@ export async function POST(req: Request) {
       email: evt.data.email_addresses[0]?.email_address ?? "No email",
       username: evt.data.username,
       name: evt.data.first_name + " " + evt.data.last_name,
-      role: 'client'
+      role: 'client',
+      image: evt.data.image_url
+
     });
 
     if (error) {
@@ -90,9 +92,10 @@ export async function POST(req: Request) {
     await supabase
       .from("users")
       .update({
-        email: evt.data.email_addresses[0]?.email_address ?? null,
+        email: evt.data.email_addresses[0]?.email_address ?? 'No email',
         username: evt.data.username,
         name: evt.data.first_name + " " + evt.data.last_name,
+        image: evt.data.image_url
       })
       .match({user_id: id});
   }
