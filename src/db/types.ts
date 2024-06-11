@@ -9,6 +9,30 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      client_notes: {
+        Row: {
+          created_at: string
+          note: string
+          reciever_id: string
+          type: Database["public"]["Enums"]["note_type"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          note: string
+          reciever_id?: string
+          type?: Database["public"]["Enums"]["note_type"]
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          note?: string
+          reciever_id?: string
+          type?: Database["public"]["Enums"]["note_type"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       coach_exercise: {
         Row: {
           coach_template_id: string
@@ -383,7 +407,7 @@ export type Database = {
             foreignKeyName: "user_routine_routine_id_fkey"
             columns: ["routine_id"]
             isOneToOne: false
-            referencedRelation: "coach_templates"
+            referencedRelation: "coach_workout"
             referencedColumns: ["id"]
           },
           {
@@ -400,31 +424,43 @@ export type Database = {
           created_at: string
           email: string
           external_id: string
-          image: string | null
+          height: number | null
+          image: string
           name: string
           role: Database["public"]["Enums"]["user_role"]
           user_id: string
           username: string
+          weight: number | null
+          weight_metric: Database["public"]["Enums"]["weight_metric"] | null
+          workout_days: number | null
         }
         Insert: {
           created_at?: string
           email: string
           external_id?: string
-          image?: string | null
+          height?: number | null
+          image: string
           name: string
           role?: Database["public"]["Enums"]["user_role"]
           user_id?: string
           username: string
+          weight?: number | null
+          weight_metric?: Database["public"]["Enums"]["weight_metric"] | null
+          workout_days?: number | null
         }
         Update: {
           created_at?: string
           email?: string
           external_id?: string
-          image?: string | null
+          height?: number | null
+          image?: string
           name?: string
           role?: Database["public"]["Enums"]["user_role"]
           user_id?: string
           username?: string
+          weight?: number | null
+          weight_metric?: Database["public"]["Enums"]["weight_metric"] | null
+          workout_days?: number | null
         }
         Relationships: []
       }
@@ -440,7 +476,9 @@ export type Database = {
     }
     Enums: {
       friends_enum: "pending" | "accepted" | "rejected"
+      note_type: "workout" | "meal"
       user_role: "coach" | "client"
+      weight_metric: "lbs" | "kg"
     }
     CompositeTypes: {
       [_ in never]: never
