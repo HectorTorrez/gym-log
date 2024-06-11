@@ -2,6 +2,7 @@ import { CardWorkout } from "@/components/coach/card-workout"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getInitials } from "@/lib/get-initials"
 import { thereIsCoach } from "@/queries/friends-notifications"
+import { getWorkoutNote } from "@/queries/notes"
 import { getWorkout } from "@/queries/workout"
 import { auth } from "@clerk/nextjs"
 import { AtSign, Mail } from "lucide-react"
@@ -11,6 +12,8 @@ export default async  function CoachPage() {
   const id = user?.userId ?? ''
   const {coach } = await thereIsCoach(id)
   const {workout, error} = await getWorkout(id)
+  const {notes} = await getWorkoutNote(id, 'workout')
+
 
   if(error) {
     return <div>{error}</div>
@@ -39,10 +42,10 @@ export default async  function CoachPage() {
         {username}</p>
       </section>
       </section>
-      <section className="min-w-[270px]">
-        <p>Program: {workout?.[0].name}</p>
-        <section className="flex flex-col gap-3">
-          <h3>Workout</h3>
+      <section className="min-w-[300px] border p-5 flex flex-col gap-4">
+        <p>Program: <span className="text-blue-400">{workout?.[0].name}</span></p>
+        <section className="flex flex-col gap-3 md:flex-row md:items-center ">
+          <h3>Workout: </h3>
           {
             workout?.map((workout => (
               workout.coach_templates.map((exercise) => {
@@ -53,6 +56,10 @@ export default async  function CoachPage() {
              
             )))
           }
+        </section>
+        <section>
+          <h3>Notes:</h3>
+          <p>{notes ? notes.note : 'There is no note'}</p>
         </section>
       </section>
     </section>

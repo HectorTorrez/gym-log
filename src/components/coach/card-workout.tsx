@@ -22,7 +22,7 @@ export function CardWorkout({ coach_exercise, name }: CardWorkoutProps) {
       <DialogTrigger asChild>
         <Button
           variant="accept"
-          className=" border border-blue-400 text-white bg-blue-400 w-full max-w-[270px]  hover:bg-blue-600"
+          className=" border border-blue-400 text-white bg-blue-400 w-full   hover:bg-blue-600"
         >
           {name}
         </Button>
