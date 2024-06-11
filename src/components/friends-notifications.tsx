@@ -14,6 +14,7 @@ import {  useUser } from "@clerk/nextjs"
 import { useEffect, useState } from "react"
 import { Friends } from "@/types/clients"
 import { toast } from "./ui/use-toast"
+import { useCoach } from "@/app/context/coach-context"
 
 
 
@@ -24,6 +25,7 @@ export  function FriendsNotifications() {
   const {user} = useUser()
   const userId = user?.id ?? ''
 
+
   const handleGetFriendsRequest = async () => {
     const {friend} = await GetFriendsRequest(userId)
     SetNewFriends(friend)
@@ -31,8 +33,8 @@ export  function FriendsNotifications() {
 
   const handleAcceptFriendRequest = async ( receiver_id: string, sender_id: string) => {
     setIsLoading(true)
-    const{error} = await AcceptFriendRequest( receiver_id, sender_id)
-    if(error === 'Request accepted'){
+    const{data} = await AcceptFriendRequest( receiver_id, sender_id)
+    if(data === 'Request accepted'){
       toast({
         title: "Friend request accepted",
       })
@@ -43,8 +45,8 @@ export  function FriendsNotifications() {
 
   const handleDeclineFriendRequest = async ( receiver_id: string, sender_id: string) => {
     setIsLoading(true)
-    const {error} = await RejectFriendRequest( receiver_id, sender_id,)
-    if(error === 'Request rejected'){
+    const {data} = await RejectFriendRequest( receiver_id, sender_id,)
+    if(data === 'Request rejected'){
       toast({
         title: "Friend request rejected",
       })

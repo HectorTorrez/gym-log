@@ -33,40 +33,85 @@ export async function GetFriendsRequest(user_id: string){
   };
 }
 
+export async function GetCoachRequest(reciever_id: string, sender_id: string){
+  const {data: coach, error} = await supabase
+    .from("friends")
+    .select(
+      `
+      reciever_id, 
+      sender_id,
+      users!friends_sender_id_fkey (
+        username, 
+        name, 
+        email
+      )
+    `,
+    )
+    .eq("reciever_id", reciever_id )
+    .eq("sender_id", sender_id)
+    .eq("status", "accepted");
+  }
+
 export async function AcceptFriendRequest(reciever_id: string, sender_id: string){
 
- const{error} =  await supabase
+ const{data} =  await supabase
     .from("friends")
     .update({status: "accepted"})
     .eq("reciever_id", reciever_id)
     .eq("sender_id", sender_id)
 
-  if(error === null) {
+  if(data === null) {
     return {
-      error: "Request accepted"
+      data: "Request accepted"
     }
   }
 
   return {
-    error
+    data
   }
 }
 
 export async function RejectFriendRequest(reciever_id: string, sender_id: string){
 
-  const{error} =  await supabase
+  const{data} =  await supabase
      .from("friends")
      .update({status: "rejected"})
      .eq("reciever_id", reciever_id)
      .eq("sender_id", sender_id)
  
-   if(error === null) {
+   if(data === null) {
      return {
-       error: "Request rejected"
+       data: "Request rejected"
      }
    }
  
    return {
-     error
+     data
    }
  }
+
+
+ export async function thereIsCoach(reciever_id: string){
+
+  const {data: coach, error} = await supabase
+    .from("friends")
+    .select(
+      `
+      reciever_id, 
+      sender_id,
+      users!friends_sender_id_fkey (
+        username, 
+        name, 
+        email,
+        image
+      )
+    `,
+    )
+    .eq("reciever_id", reciever_id )
+    .eq("status", "accepted").single();
+
+
+    return {
+      coach
+    }
+  }
