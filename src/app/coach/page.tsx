@@ -59,7 +59,7 @@ export default async  function CoachPage() {
         </section>
         <section>
           <h3>Notes:</h3>
-          <p>{notes ? notes.note : 'There is no note'}</p>
+          <p>{notes ? notes?.note : 'There is no note'}</p>
         </section>
       </section>
     </section>
