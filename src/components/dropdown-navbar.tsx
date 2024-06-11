@@ -1,8 +1,14 @@
-import {Dot, User, Weight} from "lucide-react";
-import {useState} from "react";
-import {DropdownMenuRadioGroup, DropdownMenuRadioItem} from "@radix-ui/react-dropdown-menu";
+'use client'
+import { Dot, GraduationCap, User, Weight } from "lucide-react";
+import {  useState } from "react";
+import {
 
-import {Button} from "@/components/ui/button";
+
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+} from "@radix-ui/react-dropdown-menu";
+
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,18 +21,29 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {useMetric} from "@/app/metric-context";
-import {cn} from "@/lib/utils";
+import { useMetric } from "@/app/metric-context";
+import { cn } from "@/lib/utils";
 import { ModeToggle } from "./mode-toggle";
 
+import Link from "next/link";
+import { useCoach } from "@/app/context/coach-context";
+
+
+
 export function DropDownNavbar() {
-  const {handleChangeMetric, metric} = useMetric();
+  const { handleChangeMetric, metric } = useMetric();
   const [position, setPosition] = useState(metric);
+
+  const {coachInfo} = useCoach()
+
+
 
   const onMetricChange = (value: string) => {
     handleChangeMetric(value);
     setPosition(value as "kg" | "lbs");
   };
+
+
 
   return (
     <DropdownMenu>
@@ -36,11 +53,19 @@ export function DropDownNavbar() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel className="flex items-center gap-4 justify-between">Settings
-        <ModeToggle />
-
+        <DropdownMenuLabel className="flex items-center gap-4 justify-between">
+          Gym Log
+          <ModeToggle />
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {(coachInfo) && 
+            <Link href='/coach' className={cn("flex items-center w-full px-2 py-1 text-sm hover:bg-[#5858583f] ", {
+              'bg-[#5858583f]': window.location.pathname === '/coach'
+            })}>
+              <GraduationCap className="mr-2 h-4 w-4" />
+              Coach
+            </Link>
+          }
 
         <DropdownMenuGroup>
           <DropdownMenuSub>
@@ -57,7 +82,7 @@ export function DropDownNavbar() {
                 >
                   <DropdownMenuRadioItem
                     className={cn("flex cursor-pointer items-center p-1", {
-                      "bg-[#27272a]": position === "kg",
+                      "bg-[#5858583f]": position === "kg",
                     })}
                     value="kg"
                   >
@@ -66,7 +91,7 @@ export function DropDownNavbar() {
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem
                     className={cn("flex cursor-pointer items-center p-1", {
-                      "bg-[#27272a]": position === "lbs",
+                      "bg-[#5858583f]": position === "lbs",
                     })}
                     value="lbs"
                   >

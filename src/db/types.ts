@@ -55,7 +55,7 @@ export type Database = {
           reps: number
           set: number
           user_id: string
-          weigh: number
+          weight: number
         }
         Insert: {
           created_at?: string
@@ -64,7 +64,7 @@ export type Database = {
           reps: number
           set: number
           user_id?: string
-          weigh: number
+          weight: number
         }
         Update: {
           created_at?: string
@@ -73,7 +73,7 @@ export type Database = {
           reps?: number
           set?: number
           user_id?: string
-          weigh?: number
+          weight?: number
         }
         Relationships: [
           {
@@ -122,19 +122,19 @@ export type Database = {
           created_at: string
           id: string
           name: string
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           created_at?: string
           id?: string
           name: string
-          user_id?: string | null
+          user_id?: string
         }
         Update: {
           created_at?: string
           id?: string
           name?: string
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -400,6 +400,7 @@ export type Database = {
           created_at: string
           email: string
           external_id: string
+          image: string | null
           name: string
           role: Database["public"]["Enums"]["user_role"]
           user_id: string
@@ -409,6 +410,7 @@ export type Database = {
           created_at?: string
           email: string
           external_id?: string
+          image?: string | null
           name: string
           role?: Database["public"]["Enums"]["user_role"]
           user_id?: string
@@ -418,6 +420,7 @@ export type Database = {
           created_at?: string
           email?: string
           external_id?: string
+          image?: string | null
           name?: string
           role?: Database["public"]["Enums"]["user_role"]
           user_id?: string
